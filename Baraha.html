@@ -1,0 +1,2291 @@
+<!-- Hi. If you're reading this then I will assume you know the basic shit already. -->
+<!-- ao20251127: Polishing: Bug Fixes and GitHub polishing. -->
+<!DOCTYPE html>
+<html class="dark">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<title>Baraha</title>
+	<link rel="icon" type="image/x-icon" href="TIHS_Icon_208.png">
+	
+	<!-- Added -->	
+	<style>
+		:root {
+			--color-page-back: #111;
+			--color-menu-back: #222;
+			--color-section-back: #333;
+			--color-section-fore: #444;
+			--color-text-offwhite: #ddd;
+			--color-text-offwhite-placeholder: #aaa;
+			--color-text-grey: #999;
+		}
+		body{
+			color: white;
+			font-family: system-ui, Roboto, Arial, sans-serif;
+			background-color: var(--color-page-back);
+			margin: 0;
+		}
+		#divLightkeeper{
+			display: none;
+			/*position: fixed;
+			bottom: 0px;*/
+			width: 100%;
+			background-color: #dedede; 
+			color: #000;
+		}
+		.section{
+			padding: .25rem 1rem;
+			/*padding-top: 5rem;*/
+			background-color: var(--color-section-back);
+			width: 75%; 
+			max-width: 1500px !important; 
+			margin: auto;
+		}
+		.sub-body{
+			border-radius: .5rem;
+			background-color: var(--color-section-back);
+			padding: .25rem .75rem;
+		}
+		
+		.div-center{
+			width: fit-content;
+			margin: 0 auto;
+		}
+		.border{
+			border: 1px solid;
+			border-radius: .25rem;
+			border-color: var(--color-text-grey);
+			padding: .25rem;
+			max-width: calc(100% - 2px);
+		}
+		.btn{
+			display: inline-block;
+			border-style: solid; 
+			border-width: 1px;
+			border-radius: .5rem;
+			padding: .2rem .5rem;
+			text-align: center;
+			text-decoration: none;
+			vertical-align: middle;
+			width: fit-content;
+			background-color: var(--color-section-fore);
+			border-color: var(--color-text-grey);
+
+			/*Prevent selecting text on double click*/
+			user-select: none; /* standard syntax */
+			-webkit-user-select: none; /* webkit (safari, chrome) browsers */
+			-moz-user-select: none; /* mozilla browsers */
+			-khtml-user-select: none; /* webkit (konqueror) browsers */
+			-ms-user-select: none; /* IE10+ */
+		}
+		.btn:hover{
+			cursor: pointer;
+			color: #000 !important;
+			background-color: #FFF !important;
+		}
+		.btn-block-new-form{
+			padding: .1rem .5rem;
+		}
+		.form-control{
+			background-color: var(--color-section-back);
+			color: var(--color-text-offwhite);
+			border: 1px solid #555;
+			border-radius: .25rem;     
+			width: calc(100% - 1.5rem);
+			margin: .1rem 0;
+			padding: .3rem .7rem;
+			font-size: inherit;
+		}
+		.form-control::placeholder{
+			color: var(--color-text-grey);
+		}
+		.fl{
+			float: left;
+		}
+		.fr{
+			float: right;
+		}
+		.text-center{
+			text-align: center;
+		}
+		.text-right{
+			text-align: right;
+		}
+		.text-left{
+			text-align: left;
+		}
+		.text-white{
+			color: white !important;
+		}
+		.btn-block-new-form{/*.form-new-block*/
+			margin-top: .251rem;
+		}
+		.open-section{
+			cursor: pointer;
+		}
+		.d-inline{
+			display: inline;
+		}
+		.m-auto{
+			margin: auto;
+		}
+		.m-0{
+			margin: 0px;
+		}
+		.mt-0{
+			margin-top: 0px;
+		}
+		.mb-0{
+			margin-bottom: 0px;
+		}
+		.w-100{
+			width: 100%;
+		}
+		.w-50{
+			width: 50%;
+		}
+		.w-50-m{
+			width: 50%;
+		}
+		.fz-1-25{
+			font-size: 1.25rem;
+		}
+		.fz-1-5{
+			font-size: 1.5rem;
+		}
+		.fz-2{
+			font-size: 2rem;
+		}
+		.items-center{
+			align-items: center;
+		}
+		.bg-red{
+			background-color: red !important;
+		}
+		.bg-green{
+			background-color: green; !important;
+		}
+		@media screen and (max-width: 1111px) {
+			.section{
+				width: 100%; 
+			}
+			/*Mobile widths*/
+			.w-50-m{
+				width: 100%;
+			}
+		}
+	</style>
+
+	<!-- Side Bar -->
+	<style>
+		.stuck {
+			position: sticky; 
+			min-height: 100%; 
+			top:0px;
+		}
+		#sidebarMenu{
+			display: block; 
+			float:left;
+			padding: .25rem 1rem;
+			background-color: var(--color-menu-back);
+		}
+		#stickyMenu {
+			display: none;
+			position: fixed;
+			left: 1px;
+			bottom: 1px;
+			background-color: rgba(20, 20, 20, 0.75);/**/
+			margin-bottom: calc(var(--bs-gutter-x) * .5);
+		}
+		.btn-icon{
+			font-size: 2em;
+			text-align: center;
+			height: 1.5em;
+			width: 1.5em;
+			border: white;
+			border-style: solid;
+			border-width: 1px;
+			border-radius: 100%;
+		}
+		.sb-item{
+			padding: .5rem;
+		}
+		ul.no-bullets {
+			list-style-type: none; /* Remove bullets */
+			padding: 0; /* Remove padding */
+			margin: 0; /* Remove margins */
+		}
+		.nonlink{
+			color: inherit;
+			text-decoration: none;
+		}	
+	</style>
+
+	<!-- PusoyDos -->
+	<style>
+		#btnDrop{
+			padding: .5rem;
+			background-color: green;
+		}
+	</style>
+
+	<!-- Cards -->
+	<style>
+		.card{
+			display : inline-flex;/*flex*/
+			/*
+			height: auto;
+			min-width: fit-content;
+			max-width: 13%;
+			*/
+			aspect-ratio: 63/88;
+		}
+		.cw-5{
+			width: 19%;
+		}
+		.cw-13{
+			width: 7%;
+		}
+		.card-inner{
+			display : inline-flex;/*flex*/
+			flex-direction: column;
+			width: 100%;
+			height: 100%;
+		}
+		.card-header{
+			display : flex;/*inline-flex*/
+			align-items : start;
+			justify-items: left;
+			padding-left: .25rem;
+			font-size: 1.25rem;
+		}
+		.card-body{
+			display : flex;/*inline-flex*/
+			align-items : center;
+			justify-items: center;
+			flex-grow: 12;
+		}
+		.card-body-inner{
+			flex-grow: 12;
+		}
+		.card-footer{
+			display : flex;/*inline-flex*/
+			flex-direction: row-reverse;
+			padding-right: .1rem;
+			font-size: 1.25rem;
+		}
+		@media screen and (max-width: 950px) {
+			.card-footer{
+				display : none;
+			}
+		}
+		@media screen and (max-width: 800px) {
+			.card-header{
+				display : none;
+			}
+			.card-body{
+				justify-items: left;
+			}
+		}
+
+		.rank::before{content:attr(data-rank)}
+		.suit-d::after{content:"\2666"} /*Solid Diamonds*/
+		.suit-h::after{content:"\2665"} /*Solid Hearts*/
+		.suit-s::after{content:"\2660"} /*Solid Spades*/
+		.suit-c::after{content:"\2663"} /*Solid Clubs*/
+		.suit-w-d::after{content:"\2662"} /*White Diamonds*/
+		.suit-w-h::after{content:"\2661"} /*White Hearts*/
+		.suit-w-s::after{content:"\2664"} /*White Spades*/
+		.suit-w-c::after{content:"\2667"} /*White Clubs*/
+	</style>
+
+	<!-- Dynamic CSS -->
+	<style id="styleDynamic">
+	</style>
+</head>
+<body>	
+	<!-- Sidebar Menu -->
+	<div id="sidebarMenu" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark stuck" style=" min-width: fit-content !important;">
+		<div class="text-white" style="min-height: 100vh !important;">
+			<div id="/" class="">
+				<h1 class="">Baraha</h1>
+			</div>
+			<ul class="no-bullets" id="menu" style="width: 100%;">
+				<li class="sb-item">
+					<span class="open-section" data-section="Home">Home</span>
+				<li class="sb-item">
+					<span class="open-section" data-section="PusoyDos" id="btnPusoyDos">Pusoy Dos</span>
+				</li>
+			</ul>
+			<hr>
+			<div id="closeMenu" class="border text-center" style="border-radius: 10px; width: 100%; margin-bottom: 2rem; cursor: pointer;">
+				<i class="bi-dash"></i> <span class="ms-1 d-none d-sm-inline" style="color: rgb(190, 190, 190);">Close Menu</span><i class="bi-plus" style="display: none;"></i>
+			</div>
+		</div>
+	</div>
+		
+	</div>
+	<div class="container-fluid">
+		<div class="row flex-nowrap">
+
+			<!-- Main Body -->
+			<div class="col py-3">
+
+				<!-- === === === Default === === === ===================================================================================================================================================================================================== -->
+				<div id="sectionHome" class="section" style="display: block;">
+					<div class="text-center">
+						<h1 class="mb-0">Baraha</h1>
+						v0.2.1
+						<h6 class="m-0">By: TIHS_CODE</h6>
+						<h6 class="m-0"><a href="https://tihs-code.neocities.org/" target="_blank" class="btn" style="color: inherit;">Check out my other projects</a></h6>
+						<p>
+							Play card game.
+						</p>
+						<hr>
+						<div class="border">
+						<h2 class="">Pusoy Dos</h2>
+							<span class="btn fz-1-25 open-section" data-section="PusoyDos">Play</span>
+							<hr>
+							<p>
+								A card game where the entire deck is split between the players and they take turns dropping card/s that beat the previous card combo. 
+								<br>First to run out of cards wins. Where I am from we play till last player wins.
+								<hr>4 Players recommended. 
+								<br>Suit Hierarchy: Diamonds > Hearts > Spades > Clubs.
+								<br>Rank Hierarchy: 2 > A > K > Q > J > 10 > 9 > ... > 4 > 3.
+								<br>Player with 3 of Clubs starts the game. They can use any card combo as long as it uses the 3 of Clubs.
+								<br>Standard Card Combos. Check the <a href="https://en.wikipedia.org/wiki/Big_two#Combinations" class="text-white">Wikipedia</a> for card combinations and lore.
+								<hr>Check Settings for card customization. For Phones I prefer <strong>Large Card Width</strong>. For PC I prefer <strong>Compact Card Width</strong> 
+								<br>If playing with less than 4 players you can either set the player count as needed or leave it at 4 and skip the hand/s with no player.
+							</p>
+						</div>
+
+					</div>
+				</div>
+
+				<!-- === === === Default === === === ===================================================================================================================================================================================================== -->
+				<div id="sectionPusoyDos" class="section" style="display: none; padding-bottom: 2rem;">
+					<div class="text-center">
+						<h1 class="mb-0">Pusoy Dos</h1>
+						<h6 class="m-0 btn open-section" data-section="Home">Back to Home</h6>
+						<br>
+						<h2 id="btnSettingsPusoyDos" class="btn" style="margin-bottom: .5rem;">Settings</h2>
+						<div id="divSettingsPusoyDos" class="border" style="display: none; margin-bottom: .5rem;">
+							<p>Card Display: </p>
+							<span id="btnSuitDisplay" class="btn fz-1-25">Card Display/Colors: Default</span>
+							<br>
+							<span id="btnCardWidth" class="btn fz-1-25">Toggle Card Width: Compact</span>
+							<br>
+							<span class="btn fz-1-25 btn-tglcardtext" data-type="0">Toggle Card Text: Top Left</span>
+							<span class="btn fz-1-25 btn-tglcardtext" data-type="1">Toggle Card Text: Bottom Right</span>
+							<br>
+							<br>
+							<hr>
+							<h3 id="btnForceEnd" class="btn bg-red">Force End Game</h3>
+						</div>
+						<hr>
+						<div id="pregamePusoyDos">
+							<h2 id="btnPlayPusoyDos" class="btn bg-green">Start Game</h2>
+							<p class="mt-0"><strong id="postgameResults" class="mt-0"></strong></p>
+							<div class="w-50-m m-auto border">
+								<h4>Pusoy Dos Quick Settings: </h4>
+								<span class="btn btn-quickset fz-1-25" data-setting="0">I'm playing Solo</span>
+								<br>
+								<span class="btn btn-quickset fz-1-25" data-setting="1">I'm playing with People (Passing the phone around)</span>
+								<br>
+								<br><hr>
+								<h3>Pusoy Dos Settings: </h3>
+								<span id="btnTglGameMode" class="btn fz-1-25" data-state="0">Gamemode: Game ends with 1 player remaining</span>
+								<br>
+								<span id="btnTglDiscardPile" class="btn fz-1-25" data-state="0">Enable showing Discard Pile: ON</span>
+								<br>
+								<br><hr>
+								<span id="btnPlayerCount" class="btn fz-1-25">Apply Player Count</span>
+								<input id="pusoydosPlayerCount" class="form-control text-center" type="number" min="2" max="20">
+								<br><hr>
+								<span id="btnPlayerBot" class="btn fz-1-25" data-state="OFF">Bot/Computer Players: OFF</span>
+								<div id="divPlayerBot">
+								</div>
+								<br><hr>
+								<span id="btnPlayerPassword" class="btn fz-1-25" data-state="OFF">Player Password: OFF</span>
+								<div id="divPlayerPassword">
+								</div>
+								<br>
+								<span id="btnTglPasswordPass" class="btn fz-1-25" data-state="0" style="display: none;">Show pass turn button alongside password check: ON</span>
+								<br>
+							</div>
+						</div>
+						<div id="gamePusoyDos" style="display: none; margin-bottom: 5rem;">
+							<h1>
+								Game Pile
+								<span class="btn btn-toggle-plus" data-target="divGamePileOptions" style="padding: 0 .5rem;">+</span>
+							</h1>
+							<div id="divGamePileOptions" style="margin-bottom: .5rem;" hidden>
+								<span class="btn fz-1-25 btn-toggle" data-target="divDiscardPile">Toggle Discard Pile</span>
+							</div>
+							<div id="divPlayerDetails" class="border" style="display: none;"> </div>
+							<div id="divDiscardPile" class="border" style="display: none;"> </div>
+							<div id="divLastDropped" class="border"> </div>
+
+							<div id="divBotCheck" style="display: none;">
+								<h2><span id="botName"></span>'s Turn</h2>
+								<div id="divBotDrop"> </div>
+								<h3 id="btnBotDrop" class="btn">Next Player</h3>
+							</div>
+
+							<div id="divPasswordCheck" style="display: none;">
+								<h2><span id="passwordPlayerName"></span>'s Turn</h2>
+								<input id="passwordCheck" class="form-control text-center" type="password" placeholder="Input your Password">
+								<h3 id="btnPasswordCheck" class="btn">Open Hand!</h3>
+								<div id="divPasswordCheckPass" style="display: none;">
+									<br>
+									<h3 class="btn btn-pass bg-red ">Pass!</h3>
+								</div>
+							</div>
+							
+							<div id="divPlayerSide" style="display: none;">
+								<h1>Pre-Drop Cards</h1>
+								<div class="border">
+									<div id="divPlayerDrop"> </div>
+									<h3 id="btnPass" class="btn btn-pass bg-red">Pass!</h3>
+									<div id="divDropOptions">
+										<h3 id="btnDrop" class="btn">Drop!</h3>
+										<br>
+										<h3 class="btn btn-unpredrop" data-side="0">Return to Hand: Left</h3>
+										<h3 class="btn btn-unpredrop" data-side="1">Return to Hand: Right</h3>
+									</div>
+								</div>
+
+								<h1>
+									Player<span id="playerHandName"></span>'s Hand 
+									<span class="btn btn-toggle-plus" data-target="divPlayerHandOptions" style="padding: 0 .5rem;">+</span>
+								</h1>
+								<div id="divPlayerHandOptions" style="margin-bottom: .5rem;" hidden>
+									<span class="btn fz-1-25 btn-sorthand" data-type="0">Sort by Rank</span>
+									<span class="btn fz-1-25 btn-sorthand" data-type="1">Sort by Suit</span>
+									<span class="btn fz-1-25 btn-sorthand" data-type="2">Sort by "Of a Kind"</span>
+									<span class="btn fz-1-25 btn-sorthand" data-type="3">Sort by Defaut</span>
+								</div>
+								<div id="divPlayerHand" class="border"> </div>
+
+							</div>
+							<div id="divTest" class="border" hidden> </div>
+						</div>
+					</div>
+				</div>
+				<div id="sectionPassword" class="section" style="display: none;">
+				</div>
+			</div>
+		</div>
+		<div id="stickyMenu" class="btn-icon" style="vertical-align: baseline;">...</div>
+	</div>
+
+	<script>
+		// === === === General Functions 1 === === === =====================================================================================================================================================================================================
+		var isLogged = true;
+		function ConLog(string, override = false){
+			//isLogged = true; //Uncomment to show ALL Logs
+			if(isLogged || override) console.log(string);
+		}
+		function SplitTrim(string, splitter = ","){ //ConLog(string);
+			return string.split(splitter).map((c) => c.trim()); //.map(function(cb) { return cb.trim(); });
+		}
+		function isValidX5(value){
+			return value && value != null && value != undefined && value != "null" && value != "undefined";
+		}
+
+		//Helper Functions
+		function ToggleDisplayById(name){
+			if(document.getElementById(name).style.display != "none"){
+				document.getElementById(name).style.display = "none";
+			}else{
+				document.getElementById(name).style.display = "block";
+			}
+		}
+		function DisplayById(name, newDisplay){ //ConLog("DisplayById: "+name+", "+newDisplay)
+			document.getElementById(name).style.display = newDisplay;
+		}
+		function DisplayByClass(name, newDisplay, sheetID = null){
+			let arrTemp = document.getElementsByClassName(name);
+			for(let i = 0; i < arrTemp.length; i++) {
+				let isValid = sheetID == null || (sheetID != null && sheetID == arrTemp[i].getAttribute("data-sheetID"));
+				if(isValid) arrTemp[i].style.display = newDisplay;
+			}
+		}
+		function BorderByClass(name, newBorder, sheetID = null, check = null){ //ConLog("BorderByClass, name: "+name+", newBorder: "+newBorder+", sheetID: "+sheetID+", check: "+check);
+			let arrTemp = document.getElementsByClassName(name);
+			for(let i = 0; i < arrTemp.length; i++) {
+				let isValid = (sheetID == null || (sheetID != null && sheetID == arrTemp[i].getAttribute("data-sheetID"))) 
+							&& (check == null || (check != null && check == arrTemp[i].style.borderStyle))
+				if(isValid) arrTemp[i].style.borderStyle = newBorder;
+			}
+		}
+		function AddClassByClass(name, forAddition, sheetID = null){
+			let arrTemp = document.getElementsByClassName(name);
+			for(let i = 0; i < arrTemp.length; i++) {
+				let isValid = sheetID == null || (sheetID != null && sheetID == arrTemp[i].getAttribute("data-sheetID"));
+				if(isValid)
+					arrTemp[i].classList.add(forAddition);
+			}
+		}
+		function RemoveClassByClass(name, forRemoval, sheetID = null){
+			let arrTemp = document.getElementsByClassName(name);
+			for(let i = 0; i < arrTemp.length; i++) {
+				let isValid = sheetID == null || (sheetID != null && sheetID == arrTemp[i].getAttribute("data-sheetID"));
+				if(isValid)
+					arrTemp[i].classList.remove(forRemoval);
+			}
+		}
+		function InnerHTMLByClass(name, newText, sheetID = null){
+			let arrTemp = document.getElementsByClassName(name);
+			for(let i = 0; i < arrTemp.length; i++) {
+				let isValid = sheetID == null || (sheetID != null && sheetID == arrTemp[i].getAttribute("data-sheetID"));
+				if(isValid)
+					arrTemp[i].innerHTML = newText;
+			}
+		}
+		function SetTogglables(){
+			let arrToggleables = document.getElementsByClassName("togglable-block");
+			for(let i = 0; i < arrToggleables.length; i++) {
+				arrToggleables[i].onclick = function() {
+					let target = this.getAttribute("data-target"); 
+					let forToggle = document.getElementById(target);
+					if(forToggle.classList.contains('is-active')){
+						forToggle.classList.remove('is-active');
+						DisplayById(target, "none");
+					}else{
+						forToggle.classList.add('is-active');
+						DisplayById(target, "block");
+					}
+				}
+			}
+		}
+		//Toggle basic divs
+		const arrTglBasic = document.getElementsByClassName("btn-toggle");
+		for(let i = 0; i < arrTglBasic.length; i++) {
+			arrTglBasic[i].onclick = function() {
+				ToggleDisplayById(this.getAttribute("data-target"));
+			}
+		}
+		//Toggle basic divs, with plus minus buttons
+		const arrTglPlusMinus = document.getElementsByClassName("btn-toggle-plus");
+		for(let i = 0; i < arrTglPlusMinus.length; i++) {
+			arrTglPlusMinus[i].onclick = function() {
+				let target = this.getAttribute("data-target")
+				if(this.innerHTML == "+"){
+					this.innerHTML = "-";
+					DisplayById(target, "block");
+				}else{
+					this.innerHTML = "+";
+					DisplayById(target, "none");
+				}
+			}
+		}
+		
+		document.getElementById("stickyMenu").onclick = function() {
+			DisplayById("stickyMenu", "none");
+			DisplayById("sidebarMenu", "block");
+		}
+		document.getElementById("closeMenu").onclick = function() {
+			//ConLog("test");
+			DisplayById("sidebarMenu", "none");
+			DisplayById("stickyMenu", "block");
+		}
+		
+		// === === === Database ======================================================================================================================================================================================
+		const storageUserData = "tihs-2025-baraha-storageUserData";
+		const storagePusoyDos = "tihs-2025-baraha-storagePusoyDos";
+		const actionUserData = "!U!";
+		const actionUserDataInner = "!u!";
+
+		//Card Settings
+		var currentSuitType = 0;
+		var displayCardWidth = "cw-5";//"cw-13"
+		var displayCardTextTopLeft = true;
+		var displayCardTextBotRight = true;
+
+		//Misc. Settings
+		var countPlayers = 4;
+		var isShowDiscardPile = true;
+		var isPlayerBotsON = false;
+		var isPlayerPasswordsON = true;
+		var isShowPasswordPassBtn = true;
+
+		//Pusoy Dos Settings
+		var pusoyDosGameMode = 0; //0=Play till last, 1=First winner ends game
+		var pusoyDosCountPlayers = 4;
+		var pusoyDosDiscardPile = false;
+		var pusoyDosPlayerBotsON = false;
+		var pusoyDosPlayerPasswordsON = true;
+		var pusoyDosShowPasswordPassBtn = true;
+
+		function GetStorage(storage = storageUserData){
+			let storageString = "";
+
+			if(storage == storageUserData){
+				//Card Display by Suit 
+				storageString += currentSuitType;//eventually will split to be able to customize per suit's display
+				storageString += actionUserDataInner;
+
+				//Card Width and Text
+				storageString += displayCardWidth+","+displayCardTextTopLeft+","+displayCardTextBotRight; //ConLog("GetStorage, userDataName: "+userDataName);
+
+			}else if(storage == storagePusoyDos){
+				//Pusoy Dos 
+				storageString += pusoyDosGameMode+","+pusoyDosDiscardPile
+								+","+pusoyDosCountPlayers
+								+","+pusoyDosPlayerBotsON+","+pusoyDosPlayerPasswordsON+","+pusoyDosShowPasswordPassBtn;//eventually will split to be able to customize per suit's display
+			}
+
+			return storageString;
+		}
+		const defaultStorageStringUserData = GetStorage();
+		const defaultStorageStringPusoyDos = GetStorage(storagePusoyDos);
+
+		function SetPusoyDosSettings(
+				setGM = pusoyDosGameMode, setDP = pusoyDosDiscardPile
+				, setCP = pusoyDosCountPlayers, setPB = pusoyDosPlayerBotsON, setPP = pusoyDosPlayerPasswordsON, setSPP = pusoyDosShowPasswordPassBtn) {
+
+			//Game mode button
+			pusoyDosGameMode = setGM;
+			let txtForBtn = pusoyDosGameMode == 0 ? "Game ends with 1 player remaining" : "Game ends with the first winner";
+			document.getElementById("btnTglGameMode").innerHTML = "Gamemode: "+txtForBtn;
+			
+			//Display Discard Pile Toggle
+			pusoyDosDiscardPile = setDP;
+			txtForBtn = pusoyDosDiscardPile ? "ON" : "OFF";
+			document.getElementById("btnTglDiscardPile").innerHTML = "Enable showing Discard Pile: "+txtForBtn;
+
+			//Player Count
+			pusoyDosCountPlayers = setCP;
+			document.getElementById("pusoydosPlayerCount").value = (pusoyDosCountPlayers); 
+
+			//Bots Off
+			pusoyDosPlayerBotsON = setPB;
+			let tempState = pusoyDosPlayerBotsON ? "ON" : "OFF";
+			let dataState = document.getElementById("btnPlayerBot").getAttribute("data-state");
+			if(tempState != dataState) document.getElementById("btnPlayerBot").click();
+
+			//Player Password On
+			pusoyDosPlayerPasswordsON = setPP;
+			tempState = pusoyDosPlayerPasswordsON ? "ON" : "OFF";
+			dataState = document.getElementById("btnPlayerPassword").getAttribute("data-state");
+			if(tempState != dataState) document.getElementById("btnPlayerPassword").click();
+			
+			//Password pass button
+			pusoyDosShowPasswordPassBtn = setSPP;
+			txtForBtn = pusoyDosShowPasswordPassBtn ? "ON" : "OFF";
+			document.getElementById("btnTglPasswordPass").innerHTML = "Show pass turn button alongside password check: "+txtForBtn;
+		}
+		function DisplayStorage(storage = storageUserData){
+			//document.getElementById("newUserName").value = (userDataName);
+			//ConLog("displayCardWidth: "+displayCardWidth+", displayCardTextTopLeft: "+displayCardTextTopLeft+", displayCardTextBotRight: "+displayCardTextBotRight);
+			//ConLog(displayCardTextTopLeft); ConLog(displayCardTextBotRight);
+
+			if(storage == storageUserData){
+				//Set Current data based on Loaded User Data
+				UpdateCurrentSuit();
+				UpdateCardWidth();
+
+			}else if(storage == storagePusoyDos){
+				SetPusoyDosSettings();
+			}
+		}
+
+		function SetCurrentSettingsPusoyDos() {
+			//Set this game's settings as current settings
+			countPlayers = pusoyDosCountPlayers;
+			isShowDiscardPile = pusoyDosDiscardPile;
+			isPlayerBotsON = pusoyDosPlayerBotsON;
+			isPlayerPasswordsON = pusoyDosPlayerPasswordsON;
+			isShowPasswordPassBtn = pusoyDosShowPasswordPassBtn;
+		}
+		function LoadStorage(storage = storageUserData, override = null){ 
+			let storageString = localStorage.getItem(storage); 
+			let storageSplitter = "";
+
+			//Verify then split storage strings
+			if(override != null) storageString = override;
+			if(storage == storageUserData){
+				storageSplitter = actionUserDataInner;
+				storageString = storageString ? storageString : defaultStorageStringUserData;
+
+			}else if(storage == storagePusoyDos){
+				storageSplitter = ",";
+				storageString = storageString ? storageString : defaultStorageStringPusoyDos;
+			}
+			let stringSplitStorage = SplitTrim(storageString, storageSplitter); //ConLog(storage+", storageString: "+storageString, true);
+
+			//Load data based on storage type
+			if(storage == storageUserData){
+				// === === === Load Card Display Data === === === 
+
+				// Suit Display Data
+				let stringSplitCardSuits = SplitTrim(stringSplitStorage[0]); 
+				//let sMax = stringSplitStorage.length;
+				let s = 0;
+				let temp = stringSplitCardSuits[s++];
+				if(isValidX5(temp)) currentSuitType = parseInt(temp); //eventually will split to be able to customize per suit's display
+
+				// Card Display Data
+				let stringSplitCardWT = SplitTrim(stringSplitStorage[1]); 
+				s = 0;
+				temp = stringSplitCardWT[s++];
+				if(isValidX5(temp)) displayCardWidth = temp; temp = stringSplitCardWT[s++];
+				if(isValidX5(temp)) displayCardTextTopLeft = (String(temp).toLowerCase() === 'true'); temp = stringSplitCardWT[s++]; 
+				if(isValidX5(temp)) displayCardTextBotRight = (String(temp).toLowerCase() === 'true'); 
+				//if(!isValidX5(userDataName)) UpdateStorage(true,true);
+
+			}else if(storage == storagePusoyDos){
+				// === === === Load Pusoy Dos Data === === === 
+				let stringSplitGamePusoyDos = stringSplitStorage;
+				s = 0;
+				temp = stringSplitGamePusoyDos[s++];
+				if(isValidX5(temp)) pusoyDosGameMode = temp; temp = stringSplitGamePusoyDos[s++];
+				if(isValidX5(temp)) pusoyDosDiscardPile = (String(temp).toLowerCase() === 'true'); temp = pusoyDosDiscardPile[s++];
+				if(isValidX5(temp)) pusoyDosCountPlayers = temp; temp = stringSplitGamePusoyDos[s++];
+				if(isValidX5(temp)) pusoyDosPlayerBotsON = (String(temp).toLowerCase() === 'true'); temp = stringSplitGamePusoyDos[s++];
+				if(isValidX5(temp)) pusoyDosPlayerPasswordsON = (String(temp).toLowerCase() === 'true'); temp = stringSplitGamePusoyDos[s++];
+				if(isValidX5(temp)) pusoyDosShowPasswordPassBtn = (String(temp).toLowerCase() === 'true'); 
+
+				SetCurrentSettingsPusoyDos();
+			}
+
+			DisplayStorage(storage);
+		}
+
+		function UpdateStorage(storage = storageUserData, override = false, isForReset = false){ 
+			let isConfirmed = true;
+			let defaultStorage = null;
+
+			//Set Reset confirmation and correct default storage data
+			if(isForReset){
+				let txtMsg = (storage == storageUserData ? "User Data" 
+							: (storage == storagePusoyDos ? "Pusoy Dos Settings" 
+							: "ERR"));
+				isConfirmed = isForReset && !override ? window.confirm(txtMsg+" will be restored to the default. Continue with resetting "+txtMsg+"?") : true;
+				defaultStorage = (storage == storageUserData ? defaultStorageStringUserData 
+									: (storage == storagePusoyDos ? defaultStorageStringPusoyDos
+									: null));
+			}
+
+			//Update the actual Storage
+			if(isConfirmed) {
+				if(storage == storagePusoyDos) SetCurrentSettingsPusoyDos();
+				let storageData = isForReset ? defaultStorage : GetStorage(storage); 
+				localStorage.setItem(storage, storageData); //ConLog("UpdateStorage("+storage+"), storageData: "+storageData);
+				LoadStorage(storage);
+			}
+			DisplayStorage(storage);
+		}
+
+		
+		// === === === Card Database ======================================================================================================================================================================================
+		const actionCard = "!C!";
+		const actionCardInner = "!c!";
+		const actionSuit = "!S!";
+		const actionSuitInner = "!s!";
+		const actionRank = "!R!";
+		const actionRankInner = "!r!";
+
+		class Suit {
+			constructor(stringSuit) {
+				this.ImportStringToThis(stringSuit);
+			}
+			ImportStringToThis(stringSuit){  //ConLog("class Suit arrSuitDetails: ");ConLog(blockSplit);
+				let arrSuitDetails = SplitTrim(stringSuit, actionSuitInner);
+				let i = 0;
+				let temp = arrSuitDetails[i++]; temp ??= ""; 
+				this.name = temp; /*SheetBlock ID*/		temp = arrSuitDetails[i++]; temp ??= 0; 
+				this.symbol = temp; /*Color Type: Red*/	temp = arrSuitDetails[i++]; temp ??= 0; 
+				this.displaySymbolColor = temp; /*Symbol Color*/	temp = arrSuitDetails[i++]; temp ??= 0; 
+				this.displayRankColor = temp; /*Rank Color*/	temp = arrSuitDetails[i++]; temp ??= 0; 
+				this.displayBackgroundColor = temp; /*BG Color*/	temp = arrSuitDetails[i++]; temp ??= 0; 
+				this.displayBorderStyle = temp; /*none, solid, etc. */	temp = arrSuitDetails[i++]; temp ??= 0; 
+				this.displayBorderWidth = temp; /*none, 1px, etc.*/	temp = arrSuitDetails[i++]; temp ??= 0; 
+				this.displayBorderRadiusTLBR = temp; /*Top Left & Bottom Right*/	temp = arrSuitDetails[i++]; temp ??= 0; 
+				this.displayBorderRadiusTRBL = temp; /*Top Right & Bottom Left*/	temp = arrSuitDetails[i++]; temp ??= 0; 
+				this.displayBorderColor = temp; /*none*/	//temp = arrSuitDetails[i++]; temp ??= 0; 
+			}
+			SheetBlockToString(splitter){
+				return this.sbid +splitter+ this.width +splitter+ this.border +splitter+ this.togglable;
+			}
+		}
+
+		//Set up Default Suits
+		const hexColorRed = "#FF0000";
+		const arrDefaultSuitNames = ["Diamonds", "Hearts", "Spades", "Clubs"];
+		const arrDefaultSuitSymbols = ["suit-d", "suit-h", "suit-w-s", "suit-w-c"];
+		const arrAltSuitSymbol = ["suit-w-d", "suit-w-h", "suit-w-s", "suit-w-c"];
+		const defaultRankColor = "#FFF";
+		const defaultSuitBackgroundColor = "#222";//444
+		const defaultBorderStyle = "solid";
+		const defaultBorderWidth = "1px";
+		const defaultBorderRadiusTLBR = ".5rem";
+		const defaultBorderRadiusTRBL = ".5rem";
+		const defaultBorderColor = "#666";//333
+		var arrDefaultSuits = [];
+		for(let s = 0; s < arrDefaultSuitSymbols.length; s++){
+			let suitColor = s < 2 ? hexColorRed : defaultRankColor;
+			let defaultSuit = new Suit(arrDefaultSuitNames[s] +actionSuitInner+ arrDefaultSuitSymbols[s] +actionSuitInner+ suitColor +actionSuitInner+ defaultRankColor +actionSuitInner+ defaultSuitBackgroundColor
+										+actionSuitInner+ defaultBorderStyle +actionSuitInner+ defaultBorderWidth +actionSuitInner+ defaultBorderRadiusTLBR +actionSuitInner+ defaultBorderRadiusTRBL +actionSuitInner+ defaultBorderColor);
+			arrDefaultSuits.push(defaultSuit);
+			
+		}
+
+		//Set up Classic Suit
+		const arrClassicSuitSymbols = ["suit-d", "suit-h", "suit-s", "suit-c"];
+		const classicRankColor = "#000";
+		const classicSuitBackgroundColor = "#FFF";
+		const classicBorderStyle = defaultBorderStyle;
+		const classicBorderWidth = defaultBorderWidth;
+		const classicBorderRadiusTLBR = defaultBorderRadiusTLBR;
+		const classicBorderRadiusTRBL = defaultBorderRadiusTRBL;
+		const classicBorderColor = "#DDD";
+		var arrClassicSuits = [];
+		for(let s = 0; s < arrDefaultSuitSymbols.length; s++){
+			let suitColor = s < 2 ? hexColorRed : classicRankColor;
+			let defaultSuit = new Suit(arrDefaultSuitNames[s] +actionSuitInner+ arrClassicSuitSymbols[s] +actionSuitInner+ suitColor +actionSuitInner+ classicRankColor +actionSuitInner+ classicSuitBackgroundColor
+										+actionSuitInner+ classicBorderStyle +actionSuitInner+ classicBorderWidth +actionSuitInner+ classicBorderRadiusTLBR +actionSuitInner+ classicBorderRadiusTRBL +actionSuitInner+ classicBorderColor);
+			arrClassicSuits.push(defaultSuit);
+		}
+
+		//RANK
+		class Rank {
+			constructor(name, symbol) {
+				this.name = name; 
+				this.symbol = symbol; 
+			}
+		}
+		//Set up Default Rank
+		const arrDefaultRankNames = ["2", "Ace", "King", "Queen", "Jack", "10", "9", "8", "7", "6", "5", "4", "3"];
+		const arrDefaultRankSymbols = ["2", "A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3"];
+		var arrDefaultRanks = [];
+		for(let r = 0; r < arrDefaultRankSymbols.length; r++){
+			let defaultRank = new Rank(arrDefaultRankNames[r], arrDefaultRankSymbols[r]);
+			arrDefaultRanks.push(defaultRank);
+		}
+
+		
+		//CARD
+		var defaultCardWidth = "";
+		class Card {
+			constructor(rank, suit) {
+				this.rank = rank; 
+				this.suit = suit; 
+			}
+		}
+
+		// === === === Set up Current Rules ======================================================================================================================================================================================
+		var currentGame = 0;
+		var currentPlayer = 0;
+		var countWinners = 0;
+		var divIdCount = 0;
+		var endgameResult = null;
+		var lastPlayerToDrop = null;
+		var arrPlacement = [];
+
+		var arrPlayerTypes = [];
+		var arrPasswords = [];
+		var arrPlayerHands = [];
+		var arrPlayerHandCombos = [];
+
+		var arrPreDropCards = null;
+		var arrDiscardPile = null;
+		var arrLastDrop = null;
+
+		var arrCurrentRanks = arrDefaultRanks;
+		var arrCurrentSuits = arrDefaultSuits;//arrClassicSuits;//
+		var arrCurrentRankSymbols = arrDefaultRankSymbols;
+		var arrCurrentSuitSymbols = arrDefaultSuitSymbols;
+
+		function ResetArraysPusoyDos(isDistribute = false) {
+			divIdCount = 0;
+			endgameResult = null;
+			lastPlayerToDrop = null;
+
+			arrPlayerTypes = [];
+			arrPasswords = [];
+			arrPlayerHands = [];
+			arrPlayerHandCombos = [];
+
+			arrPreDropCards = isDistribute ? [] : null;
+			arrDiscardPile = isDistribute ? [] : null;
+			arrLastDrop = null;
+		}
+		
+		function GetRandomInt(max) {
+			return Math.floor(Math.random() * max);
+		}
+		//Fisher–Yates shuffle
+		function ShuffleArray(array) {
+			var m = array.length, t, i;
+
+			// While there remain elements to shuffle…
+			while (m) {
+
+				// Pick a remaining element…
+				i = Math.floor(Math.random() * m--);
+				// And swap it with the current element.
+				t = array[m];
+				array[m] = array[i];
+				array[i] = t;
+			}
+
+		  return array;
+		}
+		function FindInArray(array, find, getType = null){
+			for(let i=0; i<array.length;i++){
+				let flag = getType == 1 ? array[i].name : array[i];
+				//ConLog(find);ConLog(flag);
+				if(find == flag){
+					return getType == 0 ? i 
+						: array[i];
+				}
+			}
+			return null;
+		}
+		function GetLastInArray(arr){
+    		return arr[arr.length - 1];
+		}
+		function IsSameCards(cardA, cardB) {
+			return cardA.rank == cardB.rank && cardA.suit == cardB.suit;
+		}
+		//getType: 0=index, 1=name
+		function FindCardInArray(array, find, getType = null){
+			for(let c = 0; c < array.length; c++){
+				let tempCard = array[c];
+				if(IsSameCards(tempCard, find))
+					return c;
+			}
+			return null;
+		}
+
+		//Sort Array of Cards
+		function SortByRankSuit(arrCards){
+			//Sort by Suit
+			arrCards.sort((a,b) => a.suit - b.suit);
+			//Sort by Rank
+			arrCards.sort((a,b) => a.rank - b.rank);
+
+			//Resulting array returns sorted by Rank. Same Ranks are sorted by Suit.
+			return arrCards;
+		}
+		function SortBySuitRank(arrCards){
+			//Sort by Rank
+			arrCards.sort((a,b) => a.rank - b.rank);
+			//Sort by Suit
+			arrCards.sort((a,b) => a.suit - b.suit);
+
+			//Resulting array returns sorted by Suit. Same Suits are sorted by Rank.
+			return arrCards;
+		}
+
+		function RemoveDuplicateCardsInArray(arrCards) {
+			let arrFinal = [];
+			for (let i=0; i<arrCards.length; i++) {
+				let currentCard = arrCards[i];
+				let isDistinct = true;
+				//if(currentCard != null && currentCard != undefined && !arrFinal.includes(currentCard)) arrFinal.push(currentCard);
+				for (let j=0; j<arrFinal.length && isDistinct; j++){
+					isDistinct = isDistinct && !IsSameCards(currentCard, arrFinal[j]);
+				}
+				if(isDistinct){
+					arrFinal.push(currentCard);
+				}else{
+					//ConLog("Excluded Card, Player "+currentPlayer+": "); ConLog(currentCard);
+				}
+			}
+			return arrFinal;
+		}
+		function FindQuadsTriosPairsSingles(arrCards, arrCardCombos, isClearNon5Cards = false){
+			arrCards = RemoveDuplicateCardsInArray(arrCards);
+
+			if(isClearNon5Cards)
+				for (var i = 1; i < 5; i++) 
+					arrCardCombos[i] = [];
+
+			let arrCurrentRankCards = [];
+			//Find Quads, Trios, Pairs, and Singles
+			for(let i=0; i <= arrCards.length; i++){
+				let currentCard = i < arrCards.length ? arrCards[i] : null;
+				//if current card has different rank as previous card, ush to player hand combo
+				if(arrCurrentRankCards.length > 0 && (currentCard == null || currentCard.rank != arrCurrentRankCards[0].rank || currentCard.rank == 0)){
+					//Set combos in temp array
+					let comboIndex = arrCurrentRankCards.length;
+					comboIndex = comboIndex == 5 ? 0 : comboIndex;
+					arrCardCombos[comboIndex].push(arrCurrentRankCards); //ConLog("=== push arrCurrentRankCards: "); ConLog(arrCurrentRankCards);
+					arrCurrentRankCards = [];
+				}
+				arrCurrentRankCards.push(currentCard); //ConLog("=== new arrCurrentRankCards: "); ConLog(arrCurrentRankCards);
+			}
+			return arrCardCombos;
+		}
+		function SubtractArray(arrA, arrB) {
+			//remove cards in arrA that exist in arrB
+			return arrA.filter( ( el ) => !arrB.includes( el ) ); 
+		}
+		function SetHandCombos(arrCards, player = null, isIgnore5Combo = false){ //ConLog("==================SetHandCombos player("+player+"), isIgnore5Combo("+isIgnore5Combo+")"); 
+			//Keeps only the first instance in the array meaning 5 Card Combos take prio over Single, Pair, Trio, or Quads
+			
+			//find 5 card combos, Part 1: Straight & Flush
+			let is5ComboFound = false;
+			let arrOrigCards = null;
+			let arrCardsBySuit = null;
+			let arrSuitCount = [[],[],[],[]];
+			let arrTempPlayerHandCombos = [[],[],[],[],[]];//index: 0 = 5 combo, 1 = single, 2 = pair, 3 = trio, 4 = quad
+
+			if(!isIgnore5Combo){
+				//Count # of cards per suit
+				arrOrigCards = arrCards;
+				arrCardsBySuit = SortBySuitRank(arrOrigCards);
+				for (let i = 0; i < arrCardsBySuit.length; i++) 
+					arrSuitCount[arrCardsBySuit[i].suit].push(arrCardsBySuit[i]);
+
+				//Check for Straight Flush ===============================================
+				let countForStraight = 1;
+				let indexStartOfFlushSuit = 0;
+				let indexStartOfStraightFlush = 0;
+				let indexEndOfStraightFlush = 0;
+				for (var i = 0; i < arrSuitCount.length; i++) {
+					//ConLog("arrSuitCount["+i+"]: "); ConLog(arrSuitCount[i]);
+					if(arrSuitCount[i].length >= 5){
+						//If Flush found, then check for Straight
+						let prevRank = arrSuitCount[i][0].rank;
+						for (let j = 1; j < arrSuitCount[i].length; j++) {
+							if(countForStraight == 1){
+								//If no Straight Hand found and fresh start, then store indices
+								indexStartOfFlushSuit = i;
+							}
+
+							if(arrSuitCount[i][j].rank == (prevRank+1)){ 
+								//If current rank is the next lower rank, then increment count and check for index changes
+								countForStraight++;
+								if(countForStraight >= 5){
+									is5ComboFound = true;
+									indexEndOfStraightFlush = j;
+									if(countForStraight > 5) indexStartOfStraightFlush++;
+								} 
+
+							}else if(countForStraight < 5){
+								//If current rank is NOT the next lower rank AND if no Straight Hand found, then set fresh start
+								countForStraight = 1;
+								indexStartOfStraightFlush = j;
+							}
+
+							prevRank = arrSuitCount[i][j].rank;
+						}
+					}
+				}
+
+				if(is5ComboFound){ //ConLog("indexStartOfStraightFlush: "+indexStartOfStraightFlush+", indexEndOfStraightFlush: "+indexEndOfStraightFlush);
+					//If Straight Flush found, then remove from arrSuitCount and insert into arrStraightFlush
+					let arrStraightFlush = [];
+					for (let i = indexEndOfStraightFlush; i >= indexStartOfStraightFlush; i--) 
+						arrStraightFlush.push(arrSuitCount[indexStartOfFlushSuit].splice(i, 1)[0]);
+
+					//Place arrStraightFlush into arrTempPlayerHandCombos
+					arrTempPlayerHandCombos[0].push(arrStraightFlush.reverse());//ConLog("==========================is5ComboFound, arrStraightFlush: "); ConLog(arrStraightFlush);
+					arrCards = SubtractArray(arrOrigCards, arrStraightFlush); //ConLog("arrDiscardPile 1: ");ConLog(arrDiscardPile);
+					is5ComboFound = false;
+				}else{
+					arrCards = arrOrigCards;
+				}
+			}
+
+			//Reorganize card combos
+			arrCards = SortByRankSuit(arrCards);
+			arrTempPlayerHandCombos = FindQuadsTriosPairsSingles(arrCards, arrTempPlayerHandCombos);
+
+
+			//Check 5 card combos
+			if(!isIgnore5Combo){
+
+				//Check for Quads ===============================================
+				if(arrTempPlayerHandCombos[4].length >= 1){
+					for (let i = 0; i < arrTempPlayerHandCombos[4].length; i++) {
+						if(arrTempPlayerHandCombos[1].length >= 1){
+							let arrQuadHand = arrTempPlayerHandCombos[4].splice(i, 1)[0].concat(arrTempPlayerHandCombos[1].pop());
+							arrTempPlayerHandCombos[0].push(arrQuadHand); //ConLog("=== arrQuadHand: "); ConLog(arrQuadHand);
+							arrCards = SubtractArray(arrCards, arrQuadHand); 
+						}
+					}
+				}
+
+				//Check for Full House ===============================================
+				//TO FIX: two full house in hand but only first one was counted as a 5 card combo
+				if(arrTempPlayerHandCombos[3].length >= 1){
+					for (let i = 0; i < arrTempPlayerHandCombos[3].length; i++) {
+						if(arrTempPlayerHandCombos[2].length >= 1){
+							let arrFullHouse = arrTempPlayerHandCombos[3].splice(i, 1)[0].concat(arrTempPlayerHandCombos[2].pop());
+							arrTempPlayerHandCombos[0].push(arrFullHouse); //ConLog("=== arrFullHouse: "); ConLog(arrFullHouse);
+							arrCards = SubtractArray(arrCards, arrFullHouse);
+						}
+					}
+				}
+
+				//Reorganize card combos
+				arrCards = SortByRankSuit(arrCards);
+				arrTempPlayerHandCombos = FindQuadsTriosPairsSingles(arrCards, arrTempPlayerHandCombos, true);
+				
+				//Check for Flushes ===============================================
+				arrOrigCards = arrCards;
+				arrCards = [];
+				arrSuitCount = [[],[],[],[]];
+
+				//Count # of cards per suit
+				arrCardsBySuit = SortBySuitRank(arrOrigCards);
+				for (let i = 0; i < arrCardsBySuit.length; i++) 
+					arrSuitCount[arrCardsBySuit[i].suit].push(arrCardsBySuit[i]);
+
+				for (let i = 0; i < arrSuitCount.length; i++) {
+					//ConLog("arrSuitCount["+i+"]: "); ConLog(arrSuitCount[i]);
+					if(arrSuitCount[i].length >= 5){
+						//Do not consider 1st and 2nd Highest Rank in Flush
+						for (let j = 0; j < arrSuitCount[i].length; j++) 
+							if(arrSuitCount[i][j].rank < 2)
+								arrCards.push(arrSuitCount[i].splice(j, 1)[0]);
+
+						//If Flush found, then save the lowest combo in arrTempPlayerHandCombos
+						if(arrSuitCount[i].length >= 5) {
+							is5ComboFound = true;
+							let arrFlush = [];
+							//let lengthSuitCount = arrSuitCount[i].length;
+							for (var j = 0; j < 5; j++) 
+								arrFlush.push(arrSuitCount[i].pop());
+
+							//ConLog("==========================is5ComboFound, arrFlush: "); ConLog(arrFlush);
+							arrTempPlayerHandCombos[0].push(arrFlush.reverse());
+						}
+					}
+				}
+				if(is5ComboFound){
+					//refill arrCards with cards not used in 5 card combo/s
+					for (let i = 0; i < arrSuitCount.length; i++) {
+						arrCards = arrCards.concat(arrSuitCount[i]); //ConLog("===arrCards: "); ConLog(arrCards);
+					}
+					is5ComboFound = false;
+				}else{
+					arrCards = arrOrigCards;
+				}
+
+				//Reorganize card combos
+				arrCards = SortByRankSuit(arrCards);
+				arrTempPlayerHandCombos = FindQuadsTriosPairsSingles(arrCards, arrTempPlayerHandCombos, true);
+				
+				//Check for Straight ===============================================
+				arrOrigCards = arrCards;
+				arrCards = [];
+				let arrRankCount = [];
+
+				//Set up arrRankCount, stores arrOrigCards per Rank
+				for (let i = 0; i < arrCurrentRanks.length; i++) {
+					arrRankCount.push([]);
+				}
+				for (let i = 0; i < arrOrigCards.length; i++) { //ConLog("arrOrigCards["+i+"]: ");ConLog(arrOrigCards[i]); 
+					arrRankCount[arrOrigCards[i].rank].push(arrCardsBySuit[i]);
+				}
+				for(let i = arrRankCount.length-1; i >= 5; i--) {
+					if(arrRankCount[i].length >= 1
+						&& arrRankCount[i-1].length >= 1
+						&& arrRankCount[i-2].length >= 1
+						&& arrRankCount[i-3].length >= 1
+						&& arrRankCount[i-4].length >= 1){
+						//If Straight found, then remove from arrSuitCount and insert into arrStraight
+						let arrStraight = [arrRankCount[i-4].pop()
+										, arrRankCount[i-3].pop()
+										, arrRankCount[i-2].pop()
+										, arrRankCount[i-1].pop()
+										, arrRankCount[i].pop()];
+
+						//Place arrStraight into arrTempPlayerHandCombos
+						arrTempPlayerHandCombos[0].push(arrStraight);//ConLog("==========================isStraightFound, arrStraight: "); ConLog(arrStraight);
+						arrCards = SubtractArray(arrOrigCards, arrStraight); 
+						is5ComboFound = true;
+					}
+				}
+				if(!is5ComboFound) arrCards = arrOrigCards;
+			
+				//Reorganize card combos
+				arrCards = SortByRankSuit(arrCards);
+				arrTempPlayerHandCombos = FindQuadsTriosPairsSingles(arrCards, arrTempPlayerHandCombos, true);
+			}
+
+			if(player != null) arrPlayerHandCombos[player] = arrTempPlayerHandCombos;
+			//ConLog("====================== SetHandCombos END, Player "+currentPlayer+", arrTempPlayerHandCombos: "); ConLog(arrTempPlayerHandCombos);
+			return arrTempPlayerHandCombos;
+		}
+		function SortByOfAKind(arrCards, player = null, isIgnore5Combo = false){ //ConLog("SortByOfAKind =================="); ConLog(arrCards);
+			let arrOrigCards = SortByRankSuit(arrCards);
+			arrCards = [];
+
+			//isIgnore5Combo = true;//for test
+			let arrTempPlayerHandCombos = SetHandCombos(arrOrigCards, player, isIgnore5Combo);
+			//ConLog("====================== SortByOfAKind, SetHandCombos, Player "+player+", arrTempPlayerHandCombos: "); ConLog(arrTempPlayerHandCombos);
+
+			//Place 5 card combos first
+			if(Array.isArray(arrTempPlayerHandCombos[0]) && arrTempPlayerHandCombos[0].length > 0){
+				for(let j=0; j < arrTempPlayerHandCombos[0].length; j++){
+					for(let k=0; k < arrTempPlayerHandCombos[0][j].length; k++){
+						arrCards.push(arrTempPlayerHandCombos[0][j][k]);
+					}
+				}
+			}
+			//Place the rest of the hand
+			for(let i=arrTempPlayerHandCombos.length; i > 0; i--){
+				if(Array.isArray(arrTempPlayerHandCombos[i]) && arrTempPlayerHandCombos[i].length > 0){
+					//ConLog("arrTempPlayerHandCombos["+i+"]: "); ConLog((arrTempPlayerHandCombos[i]));
+					for(let j=0; j < arrTempPlayerHandCombos[i].length; j++){
+						for(let k=0; k < arrTempPlayerHandCombos[i][j].length; k++){
+							//ConLog("arrTempPlayerHandCombos["+i+"]["+j+"]["+k+"]: "); ConLog((arrTempPlayerHandCombos[i][j][k]));
+							arrCards.push(arrTempPlayerHandCombos[i][j][k]);
+						}
+					}
+				}
+			}
+
+			arrCards = RemoveDuplicateCardsInArray(arrCards);
+			//ConLog("arrCards: "); ConLog((arrCards));
+
+			//Resulting array returns sorted by # of a kind from 4 to 1.
+			return arrCards;
+		}
+		function SortByDefault(arrCards){
+			//*ConLog("test onli: "); ConLog(SortByOfAKind(arrCards));
+			return SortByOfAKind(SortByRankSuit(arrCards));//*/
+			//return SortByRankSuit(arrCards);
+		}
+		function GetHighestCard(arrCards){
+			return SortByRankSuit(arrCards)[0];
+		}
+		function GetLowestCard(arrCards){
+			return SortByRankSuit(arrCards)[arrCards.length-1];
+		}
+		function CheckIfCardIsStartingCard(card){
+			return card.rank == 12 && card.suit == 3;
+		}
+		function GetHigherCard(cardA, cardB, returnType = 0){
+			//ConLog("GetHigherCard: ");ConLog(cardA);ConLog(cardB);
+			//ConLog(cardA.rank+" < "+cardB.rank+" = "+(cardA.rank < cardB.rank));
+			if(cardA.rank < cardB.rank){
+				return returnType == 0 ? cardA : 0;
+
+			}else if(cardA.rank > cardB.rank){
+				return returnType == 0 ? cardB : 1;
+
+			}else if(cardA.suit < cardB.suit){
+				return returnType == 0 ? cardA : 0;
+
+			}else if(cardA.suit > cardB.suit){
+				return returnType == 0 ? cardB : 1;
+			}
+			return null;
+		}
+		function CheckIfLeftHigherThanRight(cardA, cardB){
+			return GetHigherCard(cardA, cardB, 1) == 0;
+		}
+		function GetPrioFiveCardCombo(arrInCombo){
+			//ConLog("GetPrioFiveCardCombo, arrInCombo"); ConLog(arrInCombo);
+			if(arrInCombo.length == 5){
+
+				//Check if combo is Straight
+				let isStraight = true;
+				for(let i = 1; i < arrInCombo.length; i++) 
+					isStraight = isStraight && arrInCombo[i-1].rank == (arrInCombo[i].rank-1);
+				
+				//Check if combo is Flush
+				let isFlush = true;
+				arrInCombo = SortByDefault(arrInCombo);
+				for(let i = 1; i < arrInCombo.length; i++) 
+					isFlush = isFlush && arrInCombo[i-1].suit == arrInCombo[i].suit;
+			
+				//Check if combo is Straight Flush
+				let isStraightFlush = isStraight && isFlush;
+				let is4OfAKind = false;
+				let isFullHouse = false;
+				if(!isStraightFlush && !isFlush && !isStraight){
+
+					//Check if combo is 4 of a kind
+					let count4OfAKind = 0;
+					for(let i = 1; i < arrInCombo.length; i++) 
+						count4OfAKind += arrInCombo[i-1].rank == arrInCombo[i].rank ? 1 : 0;
+					is4OfAKind = count4OfAKind == 3 && arrInCombo[1].rank == arrInCombo[3].rank;//there are 4 cards with the same rank
+					if(!is4OfAKind){
+
+						//Check if combo is Full House
+						arrInCombo = SortByRankSuit(arrInCombo);
+						let isEqual1st2nd = arrInCombo[0].rank == arrInCombo[1].rank; //1st and 2nd card are same rank
+						let isEqual4th5th = arrInCombo[3].rank == arrInCombo[4].rank; //4th and 5th card are same rank
+						isFullHouse = (isEqual1st2nd && isEqual4th5th) //A Pair exist
+										&& ( (isEqual1st2nd && arrInCombo[2].rank == arrInCombo[1].rank) //A Trio exists, 1st, 2nd, and 3rd card are same rank
+											|| (isEqual4th5th && arrInCombo[2].rank == arrInCombo[3].rank) ) //A Trio exists, 3rd, 4th, and 5th card are same rank
+					}
+				}else if(isStraightFlush)
+					return 0; //Straight Flush, same suit and in order
+				
+				if(is4OfAKind)
+					return 1; //Quad, 4 of a kind + extra
+				
+				if(isFullHouse)
+					return 2; //Full House, 3 of a kind + pair
+				
+				if(isFlush)
+					return 3; //Flush, same suit
+				
+				if(isStraight)
+					return 4; //Straight, in order
+			}
+			return null;
+		}
+		function GetHighestCardFiveCardCombo(arrInCombo, prio = null) {
+			arrInCombo = SortByRankSuit(arrInCombo);
+			prio ??= GetPrioFiveCardCombo(arrInCombo);
+
+			if(prio == 0 || prio == 3 || prio == 4){ //Straight Flush, Flush, or Straight
+				return arrInCombo[0];
+			}else if(prio == 1 || prio == 2){ //Quad or Full House
+				return arrInCombo[2].rank == arrInCombo[0].rank ? arrInCombo[0] //If Trio or Quad is Front
+					: (prio == 1 ? arrInCombo[1] : arrInCombo[2]);
+			}
+		}
+		function GetHigherFiveCardCombo(arrComboA, arrComboB, returnType = 0){
+			//ConLog("GetHigherFiveCardCombo: ");ConLog(arrComboA);ConLog(arrComboB);
+			let highestA = GetHighestCardFiveCardCombo(arrComboA);//ConLog(highestA);
+			let highestB = GetHighestCardFiveCardCombo(arrComboB);//ConLog(highestB);
+			//ConLog("A < B = "+(highestA < highestB));
+			if(CheckIfLeftHigherThanRight(highestA, highestB)){
+				return returnType == 0 ? highestA : 0;
+			}else{
+				return returnType == 0 ? highestB : 1;
+			}
+			return null;
+		}
+		function CheckIfLeftHigherThanRightFiveCardCombo(arrComboA, arrComboB){
+			return GetHigherFiveCardCombo(arrComboA, arrComboB, 1) == 0;
+		}
+		//old CheckIfLeftHigherPrioThanRightFiveCardCombo
+		function CheckIfLeftHigherThanRightCardArray(arrComboA, arrComboB, isIgnore5Combo = false){
+			if(!isIgnore5Combo && arrComboA.length == 5 && arrComboB.length == 5){
+				let prioComboA = GetPrioFiveCardCombo(arrComboA); //ConLog("isValidDrop, prioComboA: "+prioComboA);
+				let prioComboB = GetPrioFiveCardCombo(arrComboB); //ConLog("isValidDrop, prioComboB: "+prioComboB);
+				return prioComboA < prioComboB 
+					|| (prioComboA == prioComboB && CheckIfLeftHigherThanRightFiveCardCombo(arrComboA, arrComboB));
+			}else{
+				arrComboA = SortByRankSuit(arrComboA);
+				arrComboB = SortByRankSuit(arrComboB);
+				return CheckIfLeftHigherThanRight(GetHighestCard(arrComboA), GetHighestCard(arrComboB));
+			}
+		}
+
+
+
+		//Create div for Card
+		function DisplayCard(card, targetDiv = "divPlayerHand", idArray = null, basicRank = null, basicSuit = null){//ConLog("DisplayCard, card: ");ConLog(card);
+			let isBasicOverride = basicRank != null && basicSuit != null;
+			let rankID = isBasicOverride ? arrCurrentRankSymbols.indexOf(basicRank) : card.rank;//rankID == -1 is for Set New card display
+			let suitID = isBasicOverride ? arrCurrentSuitSymbols.indexOf(basicSuit) : card.suit;
+			let classRank = isBasicOverride ? arrCurrentRanks[12] : arrCurrentRanks[rankID]; //ConLog("classRank, arrCurrentRanks["+rankID+"]: ");ConLog(classRank);
+			let classSuit = isBasicOverride ? arrCurrentSuits[3] : arrCurrentSuits[suitID]; //ConLog("classSuit, arrCurrentSuits["+suitID+"]: : ");ConLog(classSuit);
+			let rank = classRank.symbol;
+			let suit = classSuit.symbol; //ConLog("rank: "+rank+", suit: "+suit)
+			let htmlCardAttr1 = targetDiv == "divPlayerDrop" ? "" : ` id=dragSource"`+divIdCount+`" ondrop="DragTarget(event)" ondragover="DragAllow(event)" `;
+			let htmlCardAttr2 = targetDiv == "divPlayerDrop" ? "" : ` id=dragObject"`+divIdCount+`" draggable="true" ondragstart="DragSource(event)" `;
+			let htmlTextTopLeft = rankID == -1 ? "?<strong>?</strong>" : `<span class="rank `+suit+`" data-rank="`+rank+`"></span>`;
+			let htmlTextCenter = rankID == -1 ? "<h1>??</h1>" : `<h1 class="rank `+suit+`" data-rank="`+rank+`"></h1>`;
+			let htmlTextBotRight = rankID == -1 ? "<strong>?</strong>?" : htmlTextTopLeft;
+			let htmlCard = 
+				`<div class="card `+displayCardWidth+`" `+htmlCardAttr1+`>
+					<div class="card-inner" `+htmlCardAttr2+`
+							data-currentdiv="`+targetDiv+`" data-idrank="`+rankID+`" data-idsuit="`+suitID+`" data-idarray="`+idArray+`"
+							style="color: `+classSuit.displayRankColor+`; background-color: `+classSuit.displayBackgroundColor+`; border-style: `+classSuit.displayBorderStyle+`; 
+							border-width: `+classSuit.displayBorderWidth+`; border-radius: `+classSuit.displayBorderRadiusTLBR+` `+classSuit.displayBorderRadiusTRBL+`; border-color: `+classSuit.displayBorderColor+`;">
+						<div class="card-header">
+							`+htmlTextTopLeft+`
+						</div>
+						<div class="card-body">
+							<div class="card-body-inner">
+								`+htmlTextCenter+`
+							</div>
+						</div>
+						<div class="card-footer">
+							`+htmlTextBotRight+`
+						</div>
+					</div>
+				</div>`;
+			document.getElementById(targetDiv).innerHTML += htmlCard;
+			divIdCount++;
+		}
+		function SetCardTextDisplay(){
+			if(displayCardTextTopLeft) DisplayByClass("card-header", "flex");
+				else DisplayByClass("card-header", "none");
+			if(displayCardTextBotRight) DisplayByClass("card-footer", "flex");
+				else DisplayByClass("card-footer", "none");
+		}
+		//Display player hands 
+		function DisplayCardArray(arrCards = arrPlayerHands[currentPlayer], targetDiv = "divPlayerHand", isBasic = false, isReset = true){ //if(targetDiv == "divPlayerDrop"){ ConLog("DisplayCardArray, divPlayerDrop, arrCards: ");ConLog(arrCards);}
+			if(arrCards != null){//arrCards = SortByDefault(arrCards);
+				if(isReset) document.getElementById(targetDiv).innerHTML = "";
+				
+				//Display each Card
+				for(let c = 0; c < arrCards.length; c++){
+					let tempCard = arrCards[c];
+					let tempRank = isBasic ? tempCard.rank : null;
+					let tempSuit = isBasic ? tempCard.suit : null;
+					DisplayCard(tempCard, targetDiv, c, tempRank, tempSuit);
+				}
+				SetCardOnClicks();
+
+				//Display the name of the player who last dropped
+				if(targetDiv == "divLastDropped"){
+					let txtPlayerName = "Player " + (lastPlayerToDrop+1);
+					document.getElementById("divLastDropped").innerHTML += "<br>Dropped by: " + txtPlayerName;
+				}
+
+			}else if(targetDiv == "divLastDropped"){
+				//if Displaying in Last Dropped and arrLastDrop is null display a card placeholder
+				document.getElementById(targetDiv).innerHTML = "";
+				DisplayById("btnPass", "none");
+				DisplayCard(null, targetDiv, null, "?", "?");
+				document.getElementById(targetDiv).innerHTML += "<br>Set any new Card/s!";
+			}
+
+			if(targetDiv == "divPlayerDrop" && (arrCards == null || arrCards.length == 0) && (arrDiscardPile == null || arrDiscardPile.length == 0)){
+				//if Displaying in Player Drop and arrPreDropCards is null display a card placeholder
+				DisplayCard(null, targetDiv, null, "?", "?");
+				document.getElementById(targetDiv).innerHTML += 
+						((arrDiscardPile == null || arrDiscardPile.length == 0) ? "<br>- Click or Tap a card from your hand to place here. You can drop the card/s here if it's a valid combination. -" 
+						: "");
+			}
+			SetCardTextDisplay();
+		}
+		function ResetLastDrop(){
+			arrLastDrop = null;
+			DisplayCardArray(arrLastDrop, "divLastDropped");//*/
+		}
+		function DisplayCardPusoyDos(isReset = false){
+			DisplayCardArray();
+			DisplayCardArray(arrPreDropCards, "divPlayerDrop");
+			if(isReset) ResetLastDrop();
+			else DisplayCardArray(arrLastDrop, "divLastDropped");
+		}
+		function UpdateCardDisplay(){
+			document.getElementById("styleDynamic").innerHTML = "";
+			document.getElementById("styleDynamic").innerHTML += `
+				.suit-d::after{color:`+arrCurrentSuits[0].displaySymbolColor+`} 
+				.suit-h::after{color:`+arrCurrentSuits[1].displaySymbolColor+`} 
+				.suit-s::after{color:`+arrCurrentSuits[2].displaySymbolColor+`} 
+				.suit-c::after{color:`+arrCurrentSuits[3].displaySymbolColor+`}
+				.suit-w-d::after{color:`+arrCurrentSuits[0].displaySymbolColor+`} 
+				.suit-w-h::after{color:`+arrCurrentSuits[1].displaySymbolColor+`} 
+				.suit-w-s::after{color:`+arrCurrentSuits[2].displaySymbolColor+`} 
+				.suit-w-c::after{color:`+arrCurrentSuits[3].displaySymbolColor+`}`;
+		}
+		function UpdatePlayerName(name = currentPlayer){
+			name = name == currentPlayer ? name+1 : name;
+			document.getElementById("playerHandName").innerHTML = " "+name;
+		}
+		function SetInitialPlayerDetails() {
+			//ConLog("Starting Player: "+currentPlayer);
+			UpdatePlayerName();
+			DisplayCardPusoyDos(true);
+		}
+		function SetPlayerCount() {
+			countPlayers = !isNaN(countPlayers) && countPlayers >= 2 && countPlayers <= 52 ? countPlayers : 4; //ConLog("SetPlayerCount, countPlayers: "+countPlayers);
+		}
+		function SetPasswordCheck(){
+			//ResetLastDrop();
+			document.getElementById("passwordPlayerName").innerHTML = "Player "+(currentPlayer+1);
+			DisplayById("divPlayerSide", "none");
+			DisplayById("divPasswordCheck", "block");
+		}
+
+		function SetBotTurn(){ //ConLog("=== SetBotTurn Player "+currentPlayer);
+			document.getElementById("botName").innerHTML = "Player "+(currentPlayer+1)+"(Bot/Computer)";
+			DisplayById("divPlayerSide", "none");
+			DisplayById("divPasswordCheck", "none");
+			DisplayById("divBotCheck", "block");
+
+			//Set the Bot's pre drop
+			SortByOfAKind(arrPlayerHands[currentPlayer], currentPlayer);
+			let arrBotHandCombos = arrPlayerHandCombos[currentPlayer]; //ConLog(arrPlayerHandCombos);
+			let isValidDrop = false;
+			if(arrLastDrop != null){
+				let indexCardCount = arrLastDrop.length;
+				if(indexCardCount == 5){
+					//If Last Drop is a 5 card combo
+					//From Lowest to Highest Card combo check if current player predrop can beat the previous drop
+					for (let i=arrBotHandCombos[0].length-1; i>=0 && !isValidDrop; i--) { //ConLog("arrBotHandCombos["+0+"]["+i+"]: ");ConLog(arrBotHandCombos[0][i]);
+						isValidDrop = CheckIfLeftHigherThanRightCardArray(arrBotHandCombos[0][i], arrLastDrop);
+						if(isValidDrop) arrPreDropCards = arrPlayerHandCombos[currentPlayer][0].splice(i, 1)[0];
+					}
+
+				}else if(indexCardCount >= 1 && indexCardCount <= 3 && arrBotHandCombos[indexCardCount].length > 0){
+					//If Last Drop is valid and Bot has enough cards
+					let highestCardLastDrop = GetHighestCard(arrLastDrop);
+					//From Lowest to Highest Card combo check if current player predrop can beat the previous drop
+					for (let i=arrBotHandCombos[indexCardCount].length-1; i>=0 && !isValidDrop; i--) {
+						let highestCardBotDrop = GetHighestCard(arrBotHandCombos[indexCardCount][i]); //ConLog(highestCardBotDrop);ConLog(highestCardLastDrop);
+						isValidDrop = CheckIfLeftHigherThanRight(highestCardBotDrop, highestCardLastDrop);
+						if(isValidDrop) arrPreDropCards = arrPlayerHandCombos[currentPlayer][indexCardCount].splice(i, 1)[0];
+					}
+				}
+
+			}else if(arrDiscardPile == null || arrDiscardPile.length == 0){
+				//If Bot Starts the Game
+				for(let i=0; i<5 && !isValidDrop; i++) { //ConLog("Bot Start i("+i+")"); ConLog(arrBotHandCombos[i]);
+					if(arrBotHandCombos[i].length > 0){
+						for (let j=arrBotHandCombos[i].length-1; j>=0 && !isValidDrop; j--){ //ConLog("Bot Start j("+j+")"); ConLog(arrBotHandCombos[i][j]);
+							if(arrBotHandCombos[i][j].length > 0){
+								//Check each card if starting card
+								for(let k=arrBotHandCombos[i][j].length-1; k>=0 && !isValidDrop; k--) {
+									isValidDrop = CheckIfCardIsStartingCard(arrBotHandCombos[i][j][k]);
+									if(isValidDrop) arrPreDropCards = arrPlayerHandCombos[currentPlayer][i].splice(j, 1)[0];
+								}
+							}
+						}
+					}
+				}
+
+			}else{
+				//If Bot will set new drop, then find lowest card combo to drop
+				let lowestCard = GetLowestCard(arrPlayerHands[currentPlayer]);
+				for(let i=0; i<5 && !isValidDrop; i++) { //ConLog("Bot Start i("+i+")"); ConLog(arrBotHandCombos[i]);
+					if(arrBotHandCombos[i].length > 0){
+						for (let j=arrBotHandCombos[i].length-1; j>=0 && !isValidDrop; j--) { //ConLog("Bot Start j("+j+")"); ConLog(arrBotHandCombos[i][j]);
+							if(arrBotHandCombos[i][j].length > 0){
+								for(let k=arrBotHandCombos[i][j].length-1; k>=0 && !isValidDrop; k--) {
+									isValidDrop = arrBotHandCombos[i][j][k] == lowestCard;
+									if(isValidDrop) arrPreDropCards = arrPlayerHandCombos[currentPlayer][i].splice(j, 1)[0];
+								}
+							}
+						}
+					}
+				}
+			}
+			//ConLog("=== arrPreDropCards Player"+currentPlayer); ConLog(arrPreDropCards);
+			if(isValidDrop){
+				DisplayCardArray(arrPreDropCards, "divBotDrop");
+				arrPlayerHands[currentPlayer] = SubtractArray(arrPlayerHands[currentPlayer], arrPreDropCards); //remove arrPreDropCards from arrPlayerHands
+			}else{
+				document.getElementById("divBotDrop").innerHTML = "Nothing to drop.";
+			}
+		}
+
+		//Distribute Cards to players
+		function DistributeDeck(){
+			//Set up, reset previous game data
+			ResetArraysPusoyDos(true);
+
+			let arrDistOverflowOrder = [];//The order of player id to distribute overflow cards
+			SetPlayerCount();
+			UpdateCardDisplay();
+			for(let p = 0; p < countPlayers; p++){
+				arrPlayerHands.push([]);
+				arrPlayerHandCombos.push([[],[],[],[],[]]);//index: 0 = 5 combo, 1 = single, 2 = pair, 3 = trio, 4=quad
+				arrDistOverflowOrder.push(p);
+				if(isPlayerBotsON){
+					let tempPlayerType = parseInt(document.getElementById("btnBotP"+p).getAttribute("data-type"));
+					arrPlayerTypes.push(tempPlayerType); //ConLog("Player "+p+" type: "+tempPlayerType);
+				}
+				if(isPlayerPasswordsON){
+					let tempPass = document.getElementById("passwordP"+p).value;
+					tempPass = isValidX5(tempPass) ? tempPass : (p+1); //ConLog("Player "+p+" pass: "+tempPass);
+					arrPasswords.push(tempPass);
+				}
+			}
+
+			//TEST START: GUARANTEE 5 CARD COMBO
+			//let arrTest5CC = [];
+			//TEST END: GUARANTEE 5 CARD COMBO
+
+			//Randomize cards and temporarily store in DiscardPile
+			for(let s = 0; s < arrCurrentSuits.length; s++){ //ConLog("suit: "+s);
+				for(let r = 0; r < arrCurrentRanks.length; r++){ //ConLog("rank: "+r);
+					let card = new Card(r, s);
+					arrDiscardPile.push(card);
+					//TEST START: GUARANTEE 5 CARD COMBO
+					//if(s == 3 && r >= 7) arrTest5CC.push(card); //STRAIGHT FLUSH
+					//if(r == 12) arrTest5CC.push(card); //QUAD
+					//TEST END: GUARANTEE 5 CARD COMBO
+				}
+			}
+			arrDiscardPile = ShuffleArray(arrDiscardPile);
+
+			/*/TEST START: GUARANTEE 5 CARD COMBO
+			ConLog("-=-=-=-= arrTest5CC: ");ConLog(arrTest5CC);
+			arrDiscardPile = arrDiscardPile.filter( ( el ) => !arrTest5CC.includes( el ) ); //ConLog("arrDiscardPile 1: ");ConLog(arrDiscardPile); //remove cards in arrA that exist in arrB
+			arrDiscardPile = arrTest5CC.concat(arrDiscardPile); //ConLog("arrDiscardPile 2: ");ConLog(arrDiscardPile);
+			//*/
+			//TEST END: GUARANTEE 5 CARD COMBO
+
+			//Place into each Player's hand 
+			let countStartingCards = Math.floor(52/countPlayers);
+			for(let p = 0; p < countPlayers; p++){
+				for(let c = 0; c < countStartingCards; c++){
+					arrPlayerHands[p].push(arrDiscardPile.pop());
+				}
+			}
+
+			//Overflow distribution
+			if(arrDiscardPile.length > 0){
+				arrDistOverflowOrder = ShuffleArray(arrDistOverflowOrder);
+				for(let c = 0; c < arrDiscardPile.length; c++){
+					arrPlayerHands[arrDistOverflowOrder.pop()].push(arrDiscardPile[c]);
+				}
+				arrDiscardPile = [];
+			}
+
+			//Set initial order of each hand to default
+			for(let p = 0; p < countPlayers; p++){
+				let tempLowest = GetLowestCard(arrPlayerHands[p]);
+				currentPlayer = tempLowest.rank == arrCurrentRanks.length-1 && tempLowest.suit == arrCurrentSuits.length-1 ? p : currentPlayer;
+				arrPlayerHands[p] = SortByDefault(arrPlayerHands[p]);
+			}
+
+
+			//FOR TESTING START Display all player cards
+			/*/DisplayById("divTest", "block");
+			document.getElementById("divTest").innerHTML = "<h1>PLAYER HANDS TEST</h1>";
+			for(let p = 0; p < arrPlayerHands.length; p++){
+				document.getElementById("divTest").innerHTML += "<hr>";
+				//ConLog("Player: "+p);ConLog(arrPlayerHands[p]);
+				DisplayCardArray(arrPlayerHands[p], "divTest", false, false);
+			}//*/
+			//FOR TESTING END Display all player cards
+
+
+			//Turn Set Up: Distribute Cards
+			if(isPlayerBotsON && arrPlayerTypes[currentPlayer] == 1){ //ConLog("isPlayerBotsON, arrPlayerTypes["+currentPlayer+"]: BOT Player");
+				//Set up initial bot drop
+				document.getElementById("divBotDrop").innerHTML = "";
+				SetBotTurn();
+				
+			}else if(isPlayerPasswordsON){
+				//Set up initial pasword check for first player
+				document.getElementById("passwordCheck").value = "";
+				SetPasswordCheck();
+			
+			}else{
+				//Set up initial player details
+				SetInitialPlayerDetails();
+				ToggleDisplayById("divPlayerSide");
+			}
+		}
+
+
+
+		
+		var msgVerification = null;
+		function VerifyDropCards(){
+			arrPreDropCards = SortByRankSuit(arrPreDropCards);
+			let isSetNew = arrLastDrop == null; 
+
+			//No 4 card combo exists
+			let isValidDrop = arrPreDropCards.length != 4;
+			if(!isValidDrop){
+				msgVerification = "Cannot play a card combo with only 4 cards. Play your 4 of a kind with another card so that it becomes a 5 card combination.";
+				return isValidDrop;
+			}
+
+			//pre drop must have same number of cards
+			isValidDrop = isSetNew || (!isSetNew && arrLastDrop.length == arrPreDropCards.length); //if(!isSetNew) ConLog(isSetNew+", "+arrLastDrop.length+" == "+arrPreDropCards.length);
+			if(!isValidDrop){
+				msgVerification = "Your pre-drop cards does not have the same card count as the previous drop.";
+				return isValidDrop;
+			}
+
+			//At the start of the game the Lowest Card in the game, 3 of Clubs, must be part of the first drop
+			if(arrDiscardPile == null || arrDiscardPile.length == 0){ 
+				let cardLowestPreDrop = GetLastInArray(arrPreDropCards);//ConLog("cardLowestPreDrop: ");ConLog(cardLowestPreDrop);
+				isValidDrop = CheckIfCardIsStartingCard(cardLowestPreDrop);
+			}
+			if(!isValidDrop){
+				msgVerification = "Lowest Card of the game must be played. By default, the lowest card is 3 of Clubs.";
+				return isValidDrop;
+			}
+
+
+			ConLog("===VerifyDropCards===========================")
+			ConLog("arrPreDropCards: ");ConLog(arrPreDropCards);
+			ConLog("arrLastDrop: ");ConLog(arrLastDrop);
+			let arrCheckedCards = [arrPreDropCards[0]];
+
+			//Check if Pairs and Trios are valid
+			isValidDrop = (arrPreDropCards.length == 1)
+						|| (arrPreDropCards.length == 2 
+							&& arrPreDropCards[0].rank == arrPreDropCards[1].rank)
+						|| (arrPreDropCards.length == 3 
+							&& arrPreDropCards[0].rank == arrPreDropCards[1].rank
+							&& arrPreDropCards[0].rank == arrPreDropCards[2].rank);
+			//ConLog("isValidDrop, Pairs and Trios pt1: "+isValidDrop);
+
+			//Pre-Drop cards must be higher than the previous drop
+			if(arrPreDropCards.length == 5){
+				let prioPreDrop = GetPrioFiveCardCombo(arrPreDropCards); //ConLog("GetPrioFiveCardCombo, 5oak: "+prioPreDrop);
+				if(isSetNew){
+					isValidDrop = prioPreDrop != null; //ConLog("isValidDrop, new set check: "+isValidDrop);
+					if(!isValidDrop){
+						msgVerification = "You cannot skip when you are setting a new drop.";
+						return isValidDrop;
+					}
+				}else{
+					let prioLastDrop = GetPrioFiveCardCombo(arrLastDrop); ConLog("isValidDrop, prioPreDrop: "+prioPreDrop); ConLog("isValidDrop, prioLastDrop: "+prioLastDrop);
+					isValidDrop = CheckIfLeftHigherThanRightCardArray(arrPreDropCards, arrLastDrop); //ConLog("isValidDrop, 5oak: "+isValidDrop);
+					if(!isValidDrop){
+						msgVerification = "Your drop does not beat the last drop.";
+						return isValidDrop;
+					}
+				}
+			}else if(isValidDrop && !isSetNew){
+				arrLastDrop = SortByRankSuit(arrLastDrop);
+				let cardLastDrop = GetHighestCard(arrLastDrop);
+				isValidDrop = CheckIfLeftHigherThanRight(arrPreDropCards[0], cardLastDrop); //ConLog("isValidDrop, Pairs and Trios pt2: "+isValidDrop); ConLog("arrPreDropCards[0]: "+arrPreDropCards[0]+", cardLastDrop: "+cardLastDrop);
+				if(!isValidDrop){
+					msgVerification = "Your drop does not beat the last drop.";
+					return isValidDrop;
+				}
+			}
+			ConLog("VerifyDropCards, isValidDrop: "+isValidDrop);
+			return isValidDrop;
+		}
+		//Set Card on click functions
+		function SetCardOnClicks(){
+			let arrCardDivs = document.getElementsByClassName("card-inner");
+			for(let i = 0; i < arrCardDivs.length; i++) {
+				arrCardDivs[i].onclick = function() {
+
+					//Determine if from Hand or from Pre-Drop
+					let currentDiv = this.getAttribute("data-currentdiv");
+					let isDivHand = currentDiv == "divPlayerHand";
+					let isDivDrop = currentDiv == "divPlayerDrop";
+					if(isDivHand || isDivDrop){
+						let isSetNew = arrLastDrop == null;
+						let isDropFull = isSetNew ? false : arrPreDropCards.length == arrLastDrop.length; 
+
+						isDropFull = false;//Allow users to place more cards than the current combo for sorting, remove this line when better manual sorting is made
+
+						if(isDivDrop || (arrPreDropCards.length < 5 && (isSetNew || !isDropFull))){
+							//Remove the card from original div then show in target div
+							let idRank = parseInt(this.getAttribute("data-idrank"));
+							let idSuit = parseInt(this.getAttribute("data-idsuit")); //ConLog("idRank: "+idRank+", idSuit: "+idSuit);
+							let arrSourceCards = isDivHand ? arrPlayerHands[currentPlayer] : arrPreDropCards;
+							let arrTargetCards = isDivHand ? arrPreDropCards : arrPlayerHands[currentPlayer]; //ConLog("arrPlayerHands["+currentPlayer+"]"); ConLog(arrPlayerHands[currentPlayer]);
+							let indexCard = FindCardInArray(arrSourceCards, new Card(idRank, idSuit), 0); //ConLog("indexCard: ");ConLog(indexCard);
+							if(indexCard != null){
+								let targetDiv = isDivHand ? "divPlayerDrop" : "divPlayerHand";
+								let thisCard = arrSourceCards.splice(indexCard, 1)[0];
+								arrTargetCards.push(thisCard);
+								DisplayCardArray();
+								DisplayCardArray(arrPreDropCards, "divPlayerDrop");
+							}
+						}else{
+							alert("Too many Cards!");
+						}
+					}
+				}
+			}
+
+			//Toggle Drop and Pass buttons based on if player has existing predrop cards
+			if(arrPreDropCards != null && arrPreDropCards.length > 0){ 
+				DisplayById("divDropOptions", "block");
+				DisplayById("btnPass", "none");
+
+			}else{
+				DisplayById("divDropOptions", "none");
+				//Cannot Pass if player is setting new drop
+				if(arrLastDrop != null)
+					DisplayById("btnPass", "inline-block");
+			}
+		}
+
+
+
+		// === Drag n Drop functions ======================================================
+		function DragAllow(ev) {
+			ev.preventDefault();
+		}
+
+		function DragSource(ev) {
+			ev.dataTransfer.setData("src", ev.target.id);
+		}
+
+		function DragTarget(ev) {
+			ev.preventDefault();
+			var src = document.getElementById(ev.dataTransfer.getData("src")); 
+			var srcParent = src.parentNode;
+			var tgt = ev.currentTarget.firstElementChild;
+
+			//Places source card to the position of target and moves cards accordingly
+			let srcCardID = src.getAttribute("data-idarray");//ConLog("src array index: "+srcCardID);
+			let tgtCardID = tgt.getAttribute("data-idarray");//ConLog("tgt array index: "+tgtCardID);
+			let srcCard = arrPlayerHands[currentPlayer].splice(srcCardID, 1)[0];
+			arrPlayerHands[currentPlayer].splice(tgtCardID, 0, srcCard);
+
+			//Reload all Card Arrays
+			DisplayCardArray();
+			DisplayCardArray(arrPreDropCards, "divPlayerDrop");//*/
+			
+			/*/Orginal function, swaps position of cards
+			ev.currentTarget.replaceChild(src, tgt); //put source into target, deletes target
+			srcParent.appendChild(tgt); //put target into source
+			//*/
+		}
+
+
+
+		// === Functions for Game State handling ======================================================
+		function StartNewGame(){
+			DistributeDeck();
+			DisplayById("pregamePusoyDos", "none");
+			DisplayById("gamePusoyDos", "block");
+		}
+		function EndGame() {
+			document.getElementById("postgameResults").innerHTML = "Previous game results: " + endgameResult;
+			DisplayById("pregamePusoyDos", "block");
+			DisplayById("gamePusoyDos", "none");
+			DisplayById("divPasswordCheck", "none");
+			
+			ResetArraysPusoyDos();
+
+			//Reset Divs
+			document.getElementById("divDiscardPile").innerHTML = "";
+			document.getElementById("divLastDropped").innerHTML = "";
+			document.getElementById("divPlayerDrop").innerHTML = "";
+			document.getElementById("divPlayerHand").innerHTML = "";
+			document.getElementById("divTest").innerHTML = "";
+		}
+		document.getElementById("btnForceEnd").onclick = function() {
+			if (window.confirm("Are you sure you want to end the game by force?")) {
+				endgameResult = "Game ended by force.";
+				EndGame();
+			}
+		}
+
+
+
+		// === Functions for Player handling ======================================================
+		function SetCurrentPlayer() {
+			let isNextPlayerValid = false;
+			let limit = countPlayers;
+			do{
+				currentPlayer = currentPlayer == (countPlayers - 1) ? 0 : currentPlayer + 1;
+				isNextPlayerValid = arrPlayerHands[currentPlayer].length > 0;
+				limit--;
+			}while(!isNextPlayerValid && limit > 0)
+			return isNextPlayerValid;
+		}
+
+		function SetNextPlayer(){ //ConLog("SetNextPlayer, currentPlayer: "+currentPlayer);
+			isNextPlayerValid = SetCurrentPlayer();
+			if(isNextPlayerValid){ //ConLog(currentPlayer+" == "+lastPlayerToDrop);
+				if(currentPlayer == lastPlayerToDrop){
+					ResetLastDrop(); //If back to original player, Reset arrLastDrop
+					if(isShowPasswordPassBtn) DisplayById("divPasswordCheckPass", "none");
+				}else{
+					if(isShowPasswordPassBtn) DisplayById("divPasswordCheckPass", "block");
+				}
+				UpdatePlayerName();
+			}
+			return isNextPlayerValid;
+		}
+
+		function SetPlayerCards(isPassTurn = false){
+			DisplayById("divDropOptions", "none");
+			DisplayById("btnPass", "inline-block");
+			let isNextPlayerValid = false;
+			if(isPassTurn){
+				//Pass Turn
+				arrPlayerHands[currentPlayer] = arrPlayerHands[currentPlayer].concat(arrPreDropCards);
+				arrPreDropCards = [];
+				isNextPlayerValid = SetNextPlayer();
+
+			}else{
+				//Normal Turn
+				let isNextTurn = true;
+				let arrDropped = SortByDefault(arrPreDropCards);
+				arrPreDropCards = [];
+				arrLastDrop = arrDropped;
+				arrDiscardPile.push(arrDropped);
+
+				//If player Wins
+				if(arrPlayerHands[lastPlayerToDrop].length == 0){
+					countWinners++;
+					arrPlacement.push(currentPlayer+1);
+					ResetLastDrop();
+
+					//pusoyDosGameMode: 0=Play till last, 1=First winner ends game
+					if(pusoyDosGameMode == 0){
+						if(countWinners == countPlayers-1){
+							//Get last place
+							SetCurrentPlayer();
+							arrPlacement.push(currentPlayer+1);
+
+							//Set end game text
+							endgameResult = "Game Over! ";
+							for(let p = 0; p < arrPlacement.length; p++){
+								endgameResult += p == 0 ? "1st" 
+												: (p == 1 ? "2nd" 
+												: (p == 2 ? "3rd" 
+												: (p+1)+"th"));
+								endgameResult += "(Player "+arrPlacement[p]+")";
+								endgameResult += p == arrPlacement.length-1 ? "." : ", ";
+								ConLog("Winner! "+endgameResult);
+							}
+							arrPlacement = [];
+							alert(endgameResult);
+							EndGame();
+
+						}else if(isPlayerBotsON && arrPlayerTypes[lastPlayerToDrop] == 1){
+							//If Bot then send alert 
+							alert("Player " + (lastPlayerToDrop+1) + " Wins!");
+						}
+
+					}else if(pusoyDosGameMode == 1){
+						isNextTurn = false;
+						endgameResult = "Player " + (lastPlayerToDrop+1) + " Wins!";
+						alert(endgameResult);
+						EndGame();
+					}
+				}
+				//ConLog("isNextTurn: "+isNextTurn);
+				if(isNextTurn && !SetNextPlayer()) alert("Error getting next player!");
+				else isNextPlayerValid = true;
+			}
+
+			//Display Last Dropped and Discard Pile
+			DisplayCardArray(arrLastDrop, "divLastDropped");
+			DisplayCardArray(arrDiscardPile[0], "divDiscardPile");
+			for (let i = 1; i < arrDiscardPile.length; i++) {
+				DisplayCardArray(arrDiscardPile[i], "divDiscardPile", false, false);//ConLog("arrDiscardPile["+i+"]: ");ConLog(arrDiscardPile[i]);
+			}
+
+			//Turn Set Up: Player Turn
+			if(isPlayerBotsON && arrPlayerTypes[currentPlayer] == 1){ //ConLog("isPlayerBotsON, arrPlayerTypes["+currentPlayer+"]: "+arrPlayerTypes[currentPlayer]);
+				//Bot Turn
+				document.getElementById("divBotDrop").innerHTML = "";
+				SetBotTurn();
+
+			}else if(isPlayerPasswordsON){
+				//Player Password Check before turn
+				document.getElementById("passwordCheck").value = "";
+				SetPasswordCheck();
+			
+			}else{ 
+				//Player normal turn
+				DisplayCardPusoyDos();
+			}
+		}
+
+
+
+		// === Button Functions ======================================================
+
+		//On Click Button: Password Check
+		document.getElementById("btnPasswordCheck").onclick = function() {
+			let isValid = document.getElementById("passwordCheck").value == arrPasswords[currentPlayer];
+			if(isValid){
+				if(arrLastDrop == null){ //Set New
+					SetInitialPlayerDetails();
+				}else{
+					if(currentGame == 0) DisplayCardPusoyDos();
+				}
+				ToggleDisplayById("divPasswordCheck");
+				ToggleDisplayById("divPlayerSide");
+			}else{
+				alert("Incorrect Password!");
+			}
+		}
+		//On Click Button: Drop
+		document.getElementById("btnDrop").onclick = function() {
+			if(currentGame == 0){
+				if(VerifyDropCards()){
+					lastPlayerToDrop = currentPlayer;
+					SetPlayerCards();
+				}else{
+					alert("Invalid Pre-Drop Cards! "+msgVerification);
+					msgVerification = null;
+				}
+			}
+		}
+		//On Click Button: Bot/Computer Next Turn
+		document.getElementById("btnBotDrop").onclick = function() {
+			if(currentGame == 0){
+				let isPass = arrPreDropCards == null || arrPreDropCards.length == 0;
+				if(VerifyDropCards() || isPass){
+					DisplayById("divPlayerSide", "block");
+					DisplayById("divBotCheck", "none");
+					if(!isPass) lastPlayerToDrop = currentPlayer;
+					SetPlayerCards(isPass);
+				}else{
+					alert("Invalid Pre-Drop Cards! "+msgVerification);
+					msgVerification = null;
+				}
+			}
+		}
+		//Returns Cards from Pre-Drop back to Player's Hand
+		const arrBtnUnPreDrop = document.getElementsByClassName("btn-unpredrop");
+		for(let i = 0; i < arrBtnUnPreDrop.length; i++) {
+			arrBtnUnPreDrop[i].onclick = function() {
+				arrPlayerHands[currentPlayer] = this.getAttribute("data-side") == 0 
+												? arrPreDropCards.concat(arrPlayerHands[currentPlayer]) 
+												: arrPlayerHands[currentPlayer].concat(arrPreDropCards);
+				arrPreDropCards = [];
+				DisplayCardArray();
+				DisplayCardArray(arrPreDropCards, "divPlayerDrop");//*/
+			}
+		}
+		//Pass Turn
+		const arrBtnPass = document.getElementsByClassName("btn-pass");
+		for(let i = 0; i < arrBtnPass.length; i++) {
+			arrBtnPass[i].onclick = function() {
+				if(currentGame == 0){
+					if (window.confirm("Are you sure you want to pass your turn?")) {
+						SetPlayerCards(true);
+					}
+				}
+			}
+		}
+		//Toggle Sorting buttons
+		const arrBtnSortHand = document.getElementsByClassName("btn-sorthand");
+		for(let i = 0; i < arrBtnSortHand.length; i++) {
+			arrBtnSortHand[i].onclick = function() {
+				let dataType = this.getAttribute("data-type");
+				arrPlayerHands[currentPlayer] = 
+					(dataType == 0 ? SortByRankSuit(arrPlayerHands[currentPlayer])
+					: (dataType == 1 ? SortBySuitRank(arrPlayerHands[currentPlayer])
+					: (dataType == 2 ? SortByOfAKind(arrPlayerHands[currentPlayer], null, true)
+					: (dataType == 3 ? SortByOfAKind(arrPlayerHands[currentPlayer])
+					: arrPlayerHands[currentPlayer]))));
+				DisplayCardArray();
+			}
+		}
+
+
+		// === Card Settings Buttons
+		document.getElementById("btnSettingsPusoyDos").onclick = function() {
+			ToggleDisplayById("divSettingsPusoyDos");
+		}
+
+		function UpdateCurrentSuit(){
+			document.getElementById("btnSuitDisplay").innerHTML = "Card Display/Colors: ";
+			if(currentSuitType == 0){
+				arrCurrentSuits = arrDefaultSuits;
+				document.getElementById("btnSuitDisplay").innerHTML += "Default";
+			}else{
+				arrCurrentSuits = arrClassicSuits;
+				document.getElementById("btnSuitDisplay").innerHTML += "Classic";
+			}
+			UpdateCardDisplay();
+			DisplayCardPusoyDos();
+		}
+		document.getElementById("btnSuitDisplay").onclick = function() {
+			currentSuitType = currentSuitType == 0 ? 1 : 0;
+			UpdateStorage(storageUserData, true, false);
+			UpdateCurrentSuit();
+		}
+
+		function UpdateCardWidth(){
+			let txtForBtn = displayCardWidth == "cw-5" ? "Large" : "Compact";
+			document.getElementById("btnCardWidth").innerHTML = "Toggle Card Width: "+txtForBtn;
+			DisplayCardArray();
+			DisplayCardArray(arrPreDropCards, "divPlayerDrop");
+			DisplayCardArray(arrLastDrop, "divLastDropped");
+		}
+		document.getElementById("btnCardWidth").onclick = function() {
+			if(displayCardWidth == "cw-5"){
+				displayCardWidth = "cw-13";
+			}else{
+				displayCardWidth = "cw-5";
+			}
+			UpdateStorage(storageUserData, true, false);
+			UpdateCardWidth();
+		}
+
+		const arrBtnCardText = document.getElementsByClassName("btn-tglcardtext");
+		for(let i = 0; i < arrBtnCardText.length; i++) {
+			arrBtnCardText[i].onclick = function() {
+				if(this.getAttribute("data-type") == 0){
+					//Top Left Text
+					displayCardTextTopLeft = !displayCardTextTopLeft;
+					let txtForBtn = displayCardTextTopLeft ? "ON" : "OFF";
+					this.innerHTML = "Toggle Card Text: Top Left "+txtForBtn;
+				}
+				else if(this.getAttribute("data-type") == 1){ //Bottom Right Text
+					displayCardTextBotRight = !displayCardTextBotRight;
+					let txtForBtn = displayCardTextBotRight ? "ON" : "OFF";
+					this.innerHTML = "Toggle Card Text: Bottom Right "+txtForBtn;
+				}
+				UpdateStorage(storageUserData, true, false);
+				SetCardTextDisplay();
+			}
+		}
+
+
+		// === Pusoy Dos Settings Buttons
+		const arrBtnQuickSettings = document.getElementsByClassName("btn-quickset");
+		for(let i = 0; i < arrBtnQuickSettings.length; i++) {
+			arrBtnQuickSettings[i].onclick = function() {
+				if(this.getAttribute("data-setting") == 0){//solo
+					SetPusoyDosSettings(1, true, 4, true, false, false);
+				}
+				else if(this.getAttribute("data-setting") == 1){//humans
+					SetPusoyDosSettings(0, false, 4, false, true, true);
+				}
+				UpdateStorage(storageUserData, true, false);
+				SetCardTextDisplay();
+			}
+		}
+		document.getElementById("btnTglGameMode").onclick = function() {
+			if(arrDiscardPile == null){
+				pusoyDosGameMode = pusoyDosGameMode == 0 ? 1 : 0;
+				UpdateStorage(storagePusoyDos);
+
+				let txtForBtn = pusoyDosGameMode == 0 ? "Game ends with 1 player remaining" : "Game ends with the first winner";
+				this.innerHTML = "Gamemode: "+txtForBtn;
+			}else{
+				alert("Cannot change Game Mode setting during a game.");
+			}
+		}
+		document.getElementById("btnTglDiscardPile").onclick = function() {
+			if(arrDiscardPile == null){
+				pusoyDosDiscardPile = !pusoyDosDiscardPile;
+				UpdateStorage(storagePusoyDos);
+
+				let txtForBtn = isShowDiscardPile ? "ON" : "OFF";
+				this.innerHTML = "Enable showing Discard Pile: "+txtForBtn;
+			}else{
+				alert("Cannot toggle Discard Pile settings during a game.");
+			}
+		}
+		document.getElementById("btnPlayerCount").onclick = function() {
+			pusoyDosCountPlayers = parseInt(document.getElementById("pusoydosPlayerCount").value);
+
+			//Save Pusoy player count
+			UpdateStorage(storagePusoyDos);
+
+			//Set Pusoy Dos settings as current
+			SetPlayerCount();
+
+			//Double click to reset payer count dependent views
+			document.getElementById("btnPlayerPassword").click();
+			document.getElementById("btnPlayerPassword").click();
+			document.getElementById("btnPlayerBot").click();
+			document.getElementById("btnPlayerBot").click();
+		}
+		function SetBtnBots(){
+			var arrBtnBots = document.getElementsByClassName("btn-playerbots");
+			for(let i = 0; i < arrBtnBots.length; i++) {
+				arrBtnBots[i].onclick = function() {
+					let newType = parseInt(this.getAttribute("data-type")) == 0 ? 1 : 0;
+					this.setAttribute("data-type", newType);
+					let postTxt = newType == 0 ? "Human" : "Bot/Computer";
+					this.innerHTML = `Player `+ this.getAttribute("data-player") +` is ` + postTxt;
+				}
+			}
+		}
+		document.getElementById("btnPlayerBot").onclick = function() { //ConLog("OLD pusoyDosPlayerBotsON: "+pusoyDosPlayerBotsON);
+			let state = this.getAttribute("data-state");
+			document.getElementById("divPlayerBot").innerHTML = "";
+			if(state == "ON"){
+				state = "OFF";
+				pusoyDosPlayerBotsON = false;
+			}else{
+				state = "ON";
+				pusoyDosPlayerBotsON = true;
+				document.getElementById("divPlayerBot").innerHTML += `<p>If player is set to "Bot/Computer" and Player Password is ON, password will be ignored.</p>`
+				for (let p = 0; p < countPlayers; p++) { //ConLog("new pass input: "+p);
+					let type = p == 0 ? 0 : 1;//0=Human, 1=bot
+					let typeText = p == 0 ? "Human" : "Bot/Computer";
+					document.getElementById("divPlayerBot").innerHTML += 
+					`<span id="btnBotP`+p+`" class="btn btn-playerbots" data-type="`+type+`" data-player="`+(p+1)+`">Player `+(p+1)+` is `+typeText+`</span><br>`;
+				}
+				SetBtnBots();
+			}
+			this.setAttribute("data-state", state);
+			this.innerHTML = "Bot/Computer Players: " + state;
+			UpdateStorage(storagePusoyDos);
+		}
+		document.getElementById("btnPlayerPassword").onclick = function() { //ConLog("OLD pusoyDosPlayerPasswordsON: "+pusoyDosPlayerPasswordsON);
+			let state = this.getAttribute("data-state");
+			document.getElementById("divPlayerPassword").innerHTML = "";
+			if(state == "ON"){
+				state = "OFF";
+				pusoyDosPlayerPasswordsON = false;
+				DisplayById("divPasswordCheck", "none");
+				DisplayById("btnTglPasswordPass", "none");
+			}else{
+				state = "ON";
+				pusoyDosPlayerPasswordsON = true;
+				DisplayById("divPasswordCheck", "block");
+				DisplayById("btnTglPasswordPass", "block");
+				document.getElementById("divPlayerPassword").innerHTML += "<p>If left blank, the default password is the player number.</p>"
+				for (let p = 0; p < countPlayers; p++) {
+					//ConLog("new pass input: "+p);
+					document.getElementById("divPlayerPassword").innerHTML += 
+					`<input id="passwordP`+p+`" class="form-control text-center" type="password" placeholder="Player `+(p+1)+`'s Password">`;
+				}
+			}
+			this.setAttribute("data-state", state);
+			this.innerHTML = "Player Password: " + state;
+			UpdateStorage(storagePusoyDos);
+		}
+		document.getElementById("btnTglPasswordPass").onclick = function() {
+			if(arrDiscardPile == null){
+				pusoyDosShowPasswordPassBtn = !pusoyDosShowPasswordPassBtn;
+				UpdateStorage(storagePusoyDos);
+
+				let txtForBtn = isShowPasswordPassBtn ? "ON" : "OFF";
+				this.innerHTML = "Show pass turn button alongside password check: "+txtForBtn;
+				if(!isShowPasswordPassBtn) DisplayById("divPasswordCheckPass", "none");
+			}else{
+				alert("Cannot change Password settings during a game.");
+			}
+		}
+
+
+
+		// === Home to Game functions ======================================================
+		//Open Sections
+		const arrBtnOpenSections = document.getElementsByClassName("open-section");
+		for(let i = 0; i < arrBtnOpenSections.length; i++) {
+			arrBtnOpenSections[i].onclick = function() {
+				let section = this.getAttribute("data-section");
+				DisplayByClass("section","none");
+				DisplayById("section"+section, "block");
+				if(section == "PusoyDos"){
+					ConLog("SetPusoyDefaults: ");
+					//UpdateStorage(storagePusoyDos, true, true);//Reset Pusoy Dos Settings
+					LoadStorage(storagePusoyDos);//
+					document.getElementById("pusoydosPlayerCount").value = (countPlayers); 
+				}
+			}
+		}
+
+		//Button Play Pusoy Dos
+		document.getElementById("btnPlayPusoyDos").onclick = function() {
+			StartNewGame();
+		}
+
+
+
+		// === Start of page function calls ======================================================
+
+		//Start Page
+		LoadStorage();
+		
+		/*/ Reset Storage Data
+		UpdateStorage(storageUserData, true, true);
+		UpdateStorage(storagePusoyDos, true, true);//*/
+
+		//Remove Storage Data
+		//localStorage.removeItem("tihs-2025-baraha-pusoydos-storageUserData");
+
+		//Defaut settings
+		document.getElementById("closeMenu").click();
+		//document.getElementById("btnPlayerPassword").click(); //Player Passwords are on by default
+
+		//Start a Game of Pusoy Dos
+		//document.getElementById("btnPusoyDos").click();
+	</script>
+</body>
+</html>
