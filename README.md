@@ -1,5 +1,5 @@
 # Baraha
-Try it out [here](https://tihs-code.neocities.org/Baraha)!
+Download the .html file then run on your preferred browser or try it out on my website [here](https://tihs-code.neocities.org/Baraha)!
 
 ## What is it?
 A single file to put card games I want to play on the go. I plan to make the site more customizable to really fit each player's preferences when playing these games.
